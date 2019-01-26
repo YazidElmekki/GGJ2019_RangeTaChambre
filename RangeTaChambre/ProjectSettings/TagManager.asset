@@ -13,13 +13,13 @@ TagManager:
   - UI
   - 
   - 
-  - Player
-  - PlayerZone
+  - Player1
+  - Player2
   - Background
-  - 
-  - 
-  - 
-  - 
+  - BigObjectPlayer1
+  - BigObjectPlayer2
+  - PlayerZone
+  - BigObject
   - 
   - 
   - 
