@@ -28,12 +28,17 @@ public class Toy : MonoBehaviour
     public int PlayerIndex { get; set; }
     public int Points;
 
+    public bool IsInChest = true;
+
     State state;
 
 	[SerializeField]
 	private Sprite toySprite;
 	public Sprite ToySprite { get { return toySprite; } }
+    [SerializeField]
+    float distanceMinToTidyUp = 4;
 
+    public int Origin;
 
 	// Use this for initialization
 	void Start()
@@ -83,9 +88,12 @@ public class Toy : MonoBehaviour
 		return DropResult.ON_COLLIDER;
 	}
 
-    public void Taken()
+    public void Taken(int playerIndex)
     {
         state = State.CARRIED;
+
+        PlayerIndex = playerIndex;
+        IsInChest = false;
 
         GameManager.Instance.GetPlayer(PlayerIndex).toyHasTaken = GetComponent<Toy>();
     }
@@ -94,7 +102,29 @@ public class Toy : MonoBehaviour
     {
         state = State.DOWN;
 
-		if (objectType == ObjectType.BIG)
+        GameObject[] chests;
+
+        chests = GameObject.FindGameObjectsWithTag("Chest");
+
+        if ((transform.position - chests[0].transform.position).magnitude <= distanceMinToTidyUp)
+        {
+            if (PlayerIndex != chests[0].GetComponent<Chest>().playerIndex && Origin != PlayerIndex)
+            {
+                Destroy(gameObject);
+                return;
+            }
+        }
+        
+        else if ((transform.position - chests[1].transform.position).magnitude <= distanceMinToTidyUp)
+        {
+            if (PlayerIndex != chests[1].GetComponent<Chest>().playerIndex && Origin != PlayerIndex)
+            {
+                Destroy(gameObject);
+                return;
+            }
+        }
+
+        if (objectType == ObjectType.BIG)
 			GetComponent<Collider2D>().enabled = true;
     }
 

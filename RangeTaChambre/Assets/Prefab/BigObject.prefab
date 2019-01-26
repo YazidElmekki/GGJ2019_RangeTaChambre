@@ -111,7 +111,9 @@ MonoBehaviour:
   WalkSlowdown: 3
   FirstValidDrop: 1
   Points: 10
+  IsInChest: 1
   toySprite: {fileID: 21300000, guid: 58ff57f262b20194f84bd2edd12bb461, type: 3}
+  distanceMinToTidyUp: 4
 --- !u!212 &212719110619293228
 SpriteRenderer:
   m_ObjectHideFlags: 1
