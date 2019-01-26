@@ -46,7 +46,7 @@ public class Chest : MonoBehaviour {
 
         Toys[enumObject - 1].GetComponent<Renderer>().enabled = true;
 
-        GenerateNewObject(enumObject - 1);
+        GenerateNewObject(enumObject - 1); // Doit rajouter les objets dans le coffre apres en avoir pris un, a playtester !!
     }
 
     void GenerateNewObject(int index)
@@ -56,19 +56,18 @@ public class Chest : MonoBehaviour {
         if (random < 50)
         {
             Toys[index] = Instantiate(PrefabMediumObject, transform.position, Quaternion.identity).GetComponent<Toy>();
-            Toys[index].GetComponent<Renderer>().enabled = false;
 
         }
         else if (random >= 50 && random < 75)
         {
             Toys[index] = Instantiate(PrefabSmallObject, transform.position, Quaternion.identity).GetComponent<Toy>();
-            Toys[index].GetComponent<Renderer>().enabled = false;
         }
         else if (random >= 75)
         {
             Toys[index] = Instantiate(PrefabBigObject, transform.position, Quaternion.identity).GetComponent<Toy>();
-            Toys[index].GetComponent<Renderer>().enabled = false;
         }
+
+        Toys[index].GetComponent<Renderer>().enabled = false;
 
         /*
          * Index :
