@@ -2,29 +2,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Toy : MonoBehaviour {
+public class Toy : MonoBehaviour
+{
+	public enum ObjectType
+	{
+		MEDIUM = 0,
+		SMALL,
+		BIG,
+	}
 
-    [SerializeField]
-    ObjectType objectType;
+	public enum State
+	{
+		CARRIED = 0,
+		DOWN,
+	}
+
+	[SerializeField]
+    private ObjectType objectType;
+	public ObjectType CurrentObjectType { get { return objectType; } }
+
     [SerializeField]
     public float WalkSlowdown;
 
     public bool FirstValidDrop = true;
     public int PlayerIndex;
     public int Points;
-
-    enum ObjectType
-    {
-        MEDIUM = 0,
-        SMALL,
-        BIG,
-    }
-
-    enum State
-    {
-        CARRIED = 0,
-        DOWN,
-    }
 
     State state;
 

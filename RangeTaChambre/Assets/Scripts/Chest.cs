@@ -9,6 +9,23 @@ public class Chest : MonoBehaviour {
     [SerializeField]
     int Index;
 
+	[SerializeField]
+	private Sprite closedSprite;
+
+	[SerializeField]
+	private Sprite openSprite;
+
+	[Header("SD Audio clips")]
+	[SerializeField]
+	private AudioClip openChestAudioClip;
+
+	[SerializeField]
+	private AudioClip closedChestAudioClip;
+
+	private AudioSource chestAudioSource;
+
+	private SpriteRenderer spriteRenderer;
+
     Toy[] Toys;
 
     GameObject XObjectPos;
@@ -20,6 +37,11 @@ public class Chest : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
+		chestAudioSource = GetComponent<AudioSource>();
+
+		spriteRenderer = GetComponent<SpriteRenderer>();
+		spriteRenderer.sprite = closedSprite;
+
         Toys = new Toy[3];
 
         for (int i = 0; i < 3; ++i)
@@ -78,4 +100,32 @@ public class Chest : MonoBehaviour {
 
         Toys[index].PlayerIndex = Index;
     }
+
+	private void OnTriggerEnter2D(Collider2D collision)
+	{
+		if (collision.tag == "Player")
+		{
+			Player player = collision.gameObject.GetComponent<Player>();
+
+			if (player.AssignedChest == this)
+			{
+				spriteRenderer.sprite = openSprite;
+				chestAudioSource.PlayOneShot(openChestAudioClip);
+			}
+		}
+	}
+
+	private void OnTriggerExit2D(Collider2D collision)
+	{
+		if (collision.tag == "Player")
+		{
+			Player player = collision.gameObject.GetComponent<Player>();
+
+			if (player.AssignedChest == this)
+			{
+				spriteRenderer.sprite = closedSprite;
+				chestAudioSource.PlayOneShot(closedChestAudioClip);
+			}
+		}
+	}
 }

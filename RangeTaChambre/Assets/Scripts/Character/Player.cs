@@ -7,7 +7,8 @@ public class Player : MonoBehaviour
 	[SerializeField, Range(0f, 1f)]
 	private int playerIndex = 0;
     [SerializeField]
-    Chest chest;
+    private Chest chest;
+	public Chest AssignedChest { get { return chest; } }
 
     public Toy toyHasTaken;
     Toy objectToPickUp;
