@@ -122,5 +122,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectType: 2
-  WalkSlowdown: 2.5
-  playerIndex: 0
+  WalkSlowdown: 3
+  PlayerIndex: 0

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-	[SerializeField]
+	[SerializeField, Range(0f, 1f)]
 	private int playerIndex = 0;
     [SerializeField]
     Chest chest;
@@ -14,6 +14,8 @@ public class Player : MonoBehaviour
 	public int PlayerIndex { get { return playerIndex; } }
 
     public bool HasObject = false;
+
+	public int CurrentZoneIndex { get; set; }
 
     void Update ()
 	{

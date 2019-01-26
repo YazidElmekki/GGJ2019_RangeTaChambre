@@ -35,7 +35,7 @@ public class Chest : MonoBehaviour {
 
     public void TakeObject(int enumObject, int playerIndex)
     {
-        if ((playerIndex != Index) || (GameManager.Instance.GetPlayer(playerIndex).HasObject))
+        if ((playerIndex != Index) || (GameManager.Instance.GetPlayer(playerIndex).HasObject) || ((GameManager.Instance.GetPlayer(playerIndex).transform.position - transform.position).sqrMagnitude > 4))
             return;
 
         GameManager.Instance.GetPlayer(playerIndex).HasObject = true;
