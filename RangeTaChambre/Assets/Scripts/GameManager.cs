@@ -4,8 +4,10 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField]
     Daronne daronne;
+    [SerializeField]
+    public Player PlayerOne, PlayerTwo;
 
-	public static GameManager Instance
+    public static GameManager Instance
 	{
 		get
 		{
@@ -72,5 +74,17 @@ public class GameManager : MonoBehaviour
         //else
         //    //Player2Win
         daronne.EndRound();
+    }
+
+    public Player GetPlayer(int playerIndex)
+    {
+        if (PlayerOne.PlayerIndex == playerIndex)
+            return PlayerOne;
+
+        else if (PlayerTwo.PlayerIndex == playerIndex)
+            return PlayerTwo;
+
+        else
+            return null;
     }
 }

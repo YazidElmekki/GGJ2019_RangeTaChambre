@@ -33,7 +33,11 @@ public class PlayerMovement : PhysicsObject
 			move.x = InputManager.Instance.GetAxisAction(AxisActionEnum.MOVE_RIGHT, player.PlayerIndex);
 			move.y = InputManager.Instance.GetAxisAction(AxisActionEnum.MOVE_UP, player.PlayerIndex);
 
-			targetVelocity = move * moveSpeed;
+            if (!player.HasObject)
+                targetVelocity = move * moveSpeed;
+
+            else
+                targetVelocity = move * (moveSpeed - player.toyHasTaken.WalkSlowdown);
 
 			UpdateState();
 		}

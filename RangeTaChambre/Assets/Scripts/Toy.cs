@@ -6,11 +6,14 @@ public class Toy : MonoBehaviour {
 
     [SerializeField]
     ObjectType objectType;
+    [SerializeField]
+    public float WalkSlowdown;
 
     bool FirstValidDrop = true;
-    float WalkSpeed;
-    int PlayerIndex;
+    public int PlayerIndex;
     int Points;
+
+    //public int playerIndex;
 
     enum ObjectType
     {
@@ -33,25 +36,27 @@ public class Toy : MonoBehaviour {
         //GameManager.Instance.ScoreChanged += ChangeScore;
 
         state = State.DOWN;
-
-        Debug.Log(state);
-        Debug.Log(objectType);
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if (state == State.CARRIED)
+            transform.position = GameManager.Instance.GetPlayer(PlayerIndex).transform.position;
     }
 
-    void Taken()
+    public void Taken()
     {
         state = State.CARRIED;
+
+        GetComponent<Collider2D>().enabled = false;
     }
 
     void Drop()
     {
+        state = State.DOWN;
 
+        GetComponent<Collider2D>().enabled = true;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

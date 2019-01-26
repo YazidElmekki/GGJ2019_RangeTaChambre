@@ -9,32 +9,34 @@ public class Player : MonoBehaviour
     [SerializeField]
     Chest chest;
 
+    public Toy toyHasTaken;
+
 	public int PlayerIndex { get { return playerIndex; } }
 
-	bool HasObject = false;
+    public bool HasObject = false;
 
 	public int CurrentZoneIndex { get; set; }
 
-	void Update ()
+    void Update ()
 	{
 		if (InputManager.Instance.GetButtonActionDown(ButtonActionEnum.TAKE_X_OBJECT, playerIndex) == true)
 		{
-            chest.TakeObject(1);
-			Debug.Log("Take X Object " + playerIndex);
+            chest.TakeObject(1, playerIndex);
 		}
 		if (InputManager.Instance.GetButtonActionDown(ButtonActionEnum.TAKE_Y_OBJECT, playerIndex) == true)
 		{
-            chest.TakeObject(2);
-            Debug.Log("Take Y object " + playerIndex);
+            chest.TakeObject(2, playerIndex);
 		}
 		if (InputManager.Instance.GetButtonActionDown(ButtonActionEnum.TAKE_B_OBJECT, playerIndex) == true)
 		{
-            chest.TakeObject(3);
-            Debug.Log("Take B object " + playerIndex);
+            chest.TakeObject(3, playerIndex);
 		}
 		if (InputManager.Instance.GetButtonActionDown(ButtonActionEnum.TRHOW_OBJECT, playerIndex) == true)
 		{
-			Debug.Log("Throw object " + playerIndex);
+            if (HasObject)
+            {
+                //Call Matthieru function
+            }
 		}
 	}
 }
