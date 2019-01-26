@@ -9,7 +9,5 @@ public class PlayerZone : MonoBehaviour
 	{
 		Player player = other.GetComponent<Player>();
 		player.CurrentZoneIndex = zoneIndex;
-
-		Debug.Log("Player " + (player.PlayerIndex + 1).ToString() + " is in zone " + (zoneIndex + 1).ToString());
 	}
 }
