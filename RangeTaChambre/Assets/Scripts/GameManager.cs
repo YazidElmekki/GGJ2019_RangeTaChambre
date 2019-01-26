@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -7,7 +8,13 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     public Player PlayerOne, PlayerTwo;
 
-    public static GameManager Instance
+	[SerializeField]
+	private Text player1ScoreText;
+
+	[SerializeField]
+	private Text player2ScoreText;
+
+	public static GameManager Instance
 	{
 		get
 		{
@@ -33,6 +40,12 @@ public class GameManager : MonoBehaviour
 			Timer.Instance.EndRound += UseEndRound;
 		}
     }
+
+	private void Update()
+	{
+		player1ScoreText.text = "P1 : " + player1Score;
+		player2ScoreText.text = "P2 : " + player2Score;
+	}
 
 	public void PlayerScored(int playerIndex, int points)
 	{
