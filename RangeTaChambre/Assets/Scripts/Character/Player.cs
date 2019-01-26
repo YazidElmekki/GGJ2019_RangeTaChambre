@@ -36,7 +36,16 @@ public class Player : MonoBehaviour
 		{
             if (HasObject)
             {
-                //Call Matthieru function
+				toyHasTaken.Drop();
+
+				if (toyHasTaken.PlayerIndex == PlayerIndex && toyHasTaken.FirstValidDrop)
+				{
+					toyHasTaken.FirstValidDrop = false;
+					GameManager.Instance.PlayerScored(playerIndex, toyHasTaken.Points);
+				}
+
+				toyHasTaken = null;
+				HasObject = false;
             }
 		}
 	}

@@ -7,7 +7,7 @@ public class Chest : MonoBehaviour {
     [SerializeField]
     GameObject PrefabBigObject, PrefabMediumObject, PrefabSmallObject;
     [SerializeField]
-    int Index;
+    int playerIndex;
 
 	[SerializeField]
 	private Sprite closedSprite;
@@ -51,13 +51,11 @@ public class Chest : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-		//if (Toys.Length < 3)
-
 	}
 
     public void TakeObject(int enumObject, int playerIndex)
     {
-        if ((playerIndex != Index) || (GameManager.Instance.GetPlayer(playerIndex).HasObject) || ((GameManager.Instance.GetPlayer(playerIndex).transform.position - transform.position).sqrMagnitude > 4))
+        if ((playerIndex != this.playerIndex) || (GameManager.Instance.GetPlayer(playerIndex).HasObject) || ((GameManager.Instance.GetPlayer(playerIndex).transform.position - transform.position).sqrMagnitude > 4))
             return;
 
         GameManager.Instance.GetPlayer(playerIndex).HasObject = true;
@@ -66,7 +64,7 @@ public class Chest : MonoBehaviour {
 
         GameManager.Instance.GetPlayer(playerIndex).toyHasTaken = Toys[enumObject - 1];
 
-        Toys[enumObject - 1].GetComponent<Renderer>().enabled = true;
+        //Toys[enumObject - 1].GetComponent<Renderer>().enabled = true;
 
         GenerateNewObject(enumObject - 1);
     }
@@ -78,18 +76,18 @@ public class Chest : MonoBehaviour {
         if (random < 50)
         {
             Toys[index] = Instantiate(PrefabMediumObject, transform.position, Quaternion.identity).GetComponent<Toy>();
-            Toys[index].GetComponent<Renderer>().enabled = false;
+            //Toys[index].GetComponent<Renderer>().enabled = false;
 
         }
         else if (random >= 50 && random < 75)
         {
             Toys[index] = Instantiate(PrefabSmallObject, transform.position, Quaternion.identity).GetComponent<Toy>();
-            Toys[index].GetComponent<Renderer>().enabled = false;
+            //Toys[index].GetComponent<Renderer>().enabled = false;
         }
         else if (random >= 75)
         {
             Toys[index] = Instantiate(PrefabBigObject, transform.position, Quaternion.identity).GetComponent<Toy>();
-            Toys[index].GetComponent<Renderer>().enabled = false;
+            //Toys[index].GetComponent<Renderer>().enabled = false;
         }
 
         /*
@@ -99,7 +97,7 @@ public class Chest : MonoBehaviour {
          * 2 = B
          */
 
-        Toys[index].PlayerIndex = Index;
+        Toys[index].PlayerIndex = playerIndex;
     }
 
 	private void OnTriggerEnter2D(Collider2D collision)

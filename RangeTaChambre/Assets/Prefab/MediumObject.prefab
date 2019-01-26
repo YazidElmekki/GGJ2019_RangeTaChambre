@@ -122,3 +122,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectType: 0
+  WalkSlowdown: 0
+  FirstValidDrop: 1
+  PlayerIndex: 0
+  Points: 5
