@@ -30,8 +30,13 @@ public class Toy : MonoBehaviour
 
     State state;
 
-    // Use this for initialization
-    void Start()
+	[SerializeField]
+	private Sprite toySprite;
+	public Sprite ToySprite { get { return toySprite; } }
+
+
+	// Use this for initialization
+	void Start()
     {
         state = State.DOWN;
     }

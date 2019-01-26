@@ -125,3 +125,4 @@ MonoBehaviour:
   WalkSlowdown: 0
   FirstValidDrop: 1
   Points: 2
+  toySprite: {fileID: 21300000, guid: b33a09eb65c18da4fa8af2f0212e28b6, type: 3}

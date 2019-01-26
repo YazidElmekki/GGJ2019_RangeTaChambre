@@ -69,7 +69,7 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _RotationAngle: 260
+    - _RotationAngle: 425
     - _Sensitivity: 71.86
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1

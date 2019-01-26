@@ -14,8 +14,6 @@ public class Player : MonoBehaviour
 
 	public int PlayerIndex { get { return playerIndex; } }
 
-    public bool HasObject = false;
-
 	public int CurrentZoneIndex { get; set; }
 
 	BoxCollider2D boxCollider;
@@ -57,7 +55,7 @@ public class Player : MonoBehaviour
 		}
 		if (InputManager.Instance.GetButtonActionDown(ButtonActionEnum.TRHOW_OBJECT, playerIndex) == true)
 		{
-            if (HasObject)
+            if (toyHasTaken != null)
             {
 				if (toyHasTaken.CanDrop())
 				{
@@ -70,7 +68,6 @@ public class Player : MonoBehaviour
 					}
 
 					toyHasTaken = null;
-					HasObject = false;
 				}
 			}
 		}
