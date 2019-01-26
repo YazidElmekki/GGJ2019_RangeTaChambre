@@ -28,6 +28,8 @@ public class Toy : MonoBehaviour
     public int PlayerIndex { get; set; }
     public int Points;
 
+    public bool IsInChest = true;
+
     State state;
 
 	[SerializeField]
@@ -72,9 +74,12 @@ public class Toy : MonoBehaviour
 		return false;
 	}
 
-    public void Taken()
+    public void Taken(int playerIndex)
     {
         state = State.CARRIED;
+
+        PlayerIndex = playerIndex;
+        IsInChest = false;
 
         GameManager.Instance.GetPlayer(PlayerIndex).toyHasTaken = GetComponent<Toy>();
     }
@@ -82,6 +87,8 @@ public class Toy : MonoBehaviour
     public void Drop()
     {
         state = State.DOWN;
+
+        //if (PlayerIndex != )
 
 		if (objectType == ObjectType.BIG)
 			GetComponent<Collider2D>().enabled = true;
