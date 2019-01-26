@@ -2506,6 +2506,11 @@ Prefab:
       propertyPath: chest
       value: 
       objectReference: {fileID: 742963133}
+    - target: {fileID: 114348626716036188, guid: 5291a484722705c47a6b2a50b17743e9,
+        type: 2}
+      propertyPath: stunAudioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 57315e6ca39e2e043ac32cfcf200aa48, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5291a484722705c47a6b2a50b17743e9, type: 2}
   m_IsPrefabParent: 0
@@ -2773,6 +2778,11 @@ Prefab:
       propertyPath: chest
       value: 
       objectReference: {fileID: 1457695134}
+    - target: {fileID: 114448811076976072, guid: 3ef4e62f809a87a41aafff43a5e88e4c,
+        type: 2}
+      propertyPath: stunAudioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 57315e6ca39e2e043ac32cfcf200aa48, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3ef4e62f809a87a41aafff43a5e88e4c, type: 2}
   m_IsPrefabParent: 0

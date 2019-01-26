@@ -76,7 +76,7 @@ public class Toy : MonoBehaviour, IPlayerZoneTracker
 				transform.position = throwStartPos + throwDirection * ThrowDistance;
 				state = State.DOWN;
 
-				Collider2D[] overlapColliders = Physics2D.OverlapBoxAll(transform.position, GetComponent<BoxCollider2D>().size, 0.0f);
+				Collider2D[] overlapColliders = Physics2D.OverlapBoxAll(transform.position, GetComponent<BoxCollider2D>().size * 1.25f, 0.0f);
 
 				for (int i = 0; i < overlapColliders.Length; ++i)
 				{
@@ -97,24 +97,35 @@ public class Toy : MonoBehaviour, IPlayerZoneTracker
 		{
 			state = State.DOWN;
 
-			Collider2D[] overlapColliders = Physics2D.OverlapBoxAll(transform.position, GetComponent<BoxCollider2D>().size, 0.0f);
+			Collider2D[] overlapColliders = Physics2D.OverlapBoxAll(transform.position, GetComponent<BoxCollider2D>().size * 1.25f, 0.0f);
+
+			bool canScore = true;
+			PlayerZone currentPlayerZone = null;
 
 			for (int i = 0; i < overlapColliders.Length; ++i)
 			{
-				PlayerZone playerZone = overlapColliders[i].GetComponent<PlayerZone>();
-				if (playerZone != null && playerZone.ZoneIndex == throwingPlayerIndex && FirstValidDrop)
+				if (overlapColliders[i].gameObject.tag == "Player")
 				{
-					GameManager.Instance.PlayerScored(throwingPlayerIndex, Points);
+					PlayerMovement playerMovement = overlapColliders[i].gameObject.GetComponent<PlayerMovement>();
+					playerMovement.Stun();
+					Debug.Log("STUN");
+					Destroy(gameObject);
+					canScore = false;
 					break;
+				}
+				else
+				{
+					PlayerZone playerZone = overlapColliders[i].GetComponent<PlayerZone>();
+					if (playerZone != null)
+					{
+						currentPlayerZone = playerZone;
+					}
 				}
 			}
 
-			if (collision.otherCollider.gameObject.tag == "Player")
+			if (canScore == true && currentPlayerZone != null && currentPlayerZone.ZoneIndex == throwingPlayerIndex && FirstValidDrop)
 			{
-				//TODO STUN OTHER PLAYER
-				Debug.Log("STUN");
-
-				Destroy(gameObject);
+				GameManager.Instance.PlayerScored(throwingPlayerIndex, Points);
 			}
 		}
 	}
