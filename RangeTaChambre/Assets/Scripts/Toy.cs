@@ -35,7 +35,10 @@ public class Toy : MonoBehaviour
 	[SerializeField]
 	private Sprite toySprite;
 	public Sprite ToySprite { get { return toySprite; } }
+    [SerializeField]
+    float distanceMinToTidyUp = 4;
 
+    public int Origin;
 
 	// Use this for initialization
 	void Start()
@@ -88,9 +91,29 @@ public class Toy : MonoBehaviour
     {
         state = State.DOWN;
 
-        //if (PlayerIndex != )
+        GameObject[] chests;
 
-		if (objectType == ObjectType.BIG)
+        chests = GameObject.FindGameObjectsWithTag("Chest");
+
+        if ((transform.position - chests[0].transform.position).magnitude <= distanceMinToTidyUp)
+        {
+            if (PlayerIndex != chests[0].GetComponent<Chest>().playerIndex && Origin != PlayerIndex)
+            {
+                Destroy(gameObject);
+                return;
+            }
+        }
+        
+        else if ((transform.position - chests[1].transform.position).magnitude <= distanceMinToTidyUp)
+        {
+            if (PlayerIndex != chests[1].GetComponent<Chest>().playerIndex && Origin != PlayerIndex)
+            {
+                Destroy(gameObject);
+                return;
+            }
+        }
+
+        if (objectType == ObjectType.BIG)
 			GetComponent<Collider2D>().enabled = true;
     }
 

@@ -7,7 +7,7 @@ public class Chest : MonoBehaviour {
     [SerializeField]
     GameObject PrefabBigObject, PrefabMediumObject, PrefabSmallObject;
     [SerializeField]
-    int playerIndex;
+    public int playerIndex;
 
 	[SerializeField]
 	private Sprite closedSprite;
@@ -70,14 +70,12 @@ public class Chest : MonoBehaviour {
         if ((playerIndex != pIndex) || (GameManager.Instance.GetPlayer(playerIndex).toyHasTaken != null) || ((GameManager.Instance.GetPlayer(playerIndex).transform.position - transform.position).sqrMagnitude > 10))
             return false;
 
-        Toys[enumObject - 1].Taken();
+        Toys[enumObject - 1].Taken(pIndex);
 		Toys[enumObject - 1].GetComponentInChildren<Renderer>().enabled = true;
 
 		GameManager.Instance.GetPlayer(playerIndex).toyHasTaken = Toys[enumObject - 1];
 
-        //Toys[enumObject - 1].GetComponent<Renderer>().enabled = true;
-
-        GenerateNewObject(enumObject - 1); // Doit rajouter les objets dans le coffre apres en avoir pris un, a playtester !!
+        GenerateNewObject(enumObject - 1);
 		return true;
     }
 
@@ -98,7 +96,7 @@ public class Chest : MonoBehaviour {
             Toys[index] = Instantiate(PrefabBigObject, transform.position, Quaternion.identity).GetComponent<Toy>();
         }
 
-        //Toys[index].GetComponent<Renderer>().enabled = false;
+        Toys[index].Origin = playerIndex;
 
         /*
          * Index :

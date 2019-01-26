@@ -79,6 +79,7 @@ public class Player : MonoBehaviour
                 objects = GameObject.FindGameObjectsWithTag("Toy");
                 Toy objectToPickUp = null;
                 Vector3 newDistance = new Vector3(10, 10, 10);
+
                 foreach (GameObject Object in objects)
                 {
                     Vector3 distance;
@@ -89,12 +90,13 @@ public class Player : MonoBehaviour
                     {
                         newDistance = distance;
 
-                        objectToPickUp = Object.gameObject.GetComponent<Toy>();
+                        if (!Object.gameObject.GetComponent<Toy>().IsInChest)
+                            objectToPickUp = Object.gameObject.GetComponent<Toy>();
                     }
                 }
 
                 if (objectToPickUp != null)
-                    objectToPickUp.Taken();
+                    objectToPickUp.Taken(playerIndex);
             }
         }
 

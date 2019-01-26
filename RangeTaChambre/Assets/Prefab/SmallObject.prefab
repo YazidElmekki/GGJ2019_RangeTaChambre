@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 114470735480974550}
   m_Layer: 0
   m_Name: SmallObject
-  m_TagString: Untagged
+  m_TagString: Toy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -125,4 +125,6 @@ MonoBehaviour:
   WalkSlowdown: 0
   FirstValidDrop: 1
   Points: 2
+  IsInChest: 1
   toySprite: {fileID: 21300000, guid: b33a09eb65c18da4fa8af2f0212e28b6, type: 3}
+  distanceMinToTidyUp: 4
