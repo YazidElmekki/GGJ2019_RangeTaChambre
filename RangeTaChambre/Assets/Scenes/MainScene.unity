@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 64411212}
   - component: {fileID: 64411213}
   - component: {fileID: 64411214}
-  m_Layer: 9
+  m_Layer: 13
   m_Name: Player2Zone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -279,7 +279,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &417825199
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1841,7 +1841,7 @@ GameObject:
   - component: {fileID: 1589758226}
   - component: {fileID: 1589758227}
   - component: {fileID: 1589758228}
-  m_Layer: 9
+  m_Layer: 13
   m_Name: Player1Zone
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -54,13 +54,13 @@ public class Toy : MonoBehaviour
 
 	public bool CanDrop()
 	{
-		Collider2D[] colliders = Physics2D.OverlapPointAll(transform.position, LayerMask.GetMask("PlayerZone"));
+		Collider2D[] colliders = Physics2D.OverlapBoxAll(transform.position, GetComponent<BoxCollider2D>().size, 0.0f);
 
 		int otherCollider = 0;
 		
 		for (int i = 0; i < colliders.Length; ++i)
 		{
-			if (colliders[i].gameObject != gameObject)
+			if (colliders[i].gameObject != gameObject && colliders[i].gameObject.layer != LayerMask.NameToLayer("PlayerZone"))
 			{
 				++otherCollider;
 			}
