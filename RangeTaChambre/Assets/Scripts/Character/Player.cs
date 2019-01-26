@@ -15,11 +15,6 @@ public class Player : MonoBehaviour
 
 	public int CurrentZoneIndex { get; set; }
 
-	private bool CanDrop()
-	{
-		return CurrentZoneIndex == playerIndex;
-	}
-
 	void Update ()
 	{
 		if (InputManager.Instance.GetButtonActionDown(ButtonActionEnum.TAKE_X_OBJECT, playerIndex) == true)
