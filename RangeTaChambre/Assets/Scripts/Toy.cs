@@ -24,19 +24,15 @@ public class Toy : MonoBehaviour
     [SerializeField]
     public float WalkSlowdown;
 
-    bool FirstValidDrop = true;
+    public bool FirstValidDrop = true;
     public int PlayerIndex;
-    int Points;
-
-    //public int playerIndex;
+    public int Points;
 
     State state;
 
     // Use this for initialization
     void Start()
     {
-        //GameManager.Instance.ScoreChanged += ChangeScore;
-
         state = State.DOWN;
     }
 
@@ -50,26 +46,23 @@ public class Toy : MonoBehaviour
     public void Taken()
     {
         state = State.CARRIED;
-
-        GetComponent<Collider2D>().enabled = false;
     }
 
-    void Drop()
+    public void Drop()
     {
         state = State.DOWN;
 
-        GetComponent<Collider2D>().enabled = true;
-    }
+		if (objectType == ObjectType.BIG)
+		{
+			if (PlayerIndex == 0)
+				gameObject.layer = LayerMask.NameToLayer("BigToyPlayer1");
+			else
+				gameObject.layer = LayerMask.NameToLayer("BigToyPlayer1");
+		}
+	}
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        //if ((collision.gameObject.name == "ZonePlayerTwo") && (IsFristTimeIsDown))
-        //    ChangeScore(Points, Points);
-        //      IsFirstTimeIsDown = false;
-    }
-
-    void ChangeScore(int PointsPlayerOne, int PointsPlayerTwo)
-    {
-
-    }
+	private void OnTriggerExit2D(Collider2D other)
+	{
+		gameObject.layer = LayerMask.NameToLayer("BigToy");
+	}
 }
