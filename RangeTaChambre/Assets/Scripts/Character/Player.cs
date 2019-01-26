@@ -4,10 +4,17 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-	[SerializeField]
+	[SerializeField, Range(0f, 1f)]
 	private int playerIndex = 0;
 
 	public int PlayerIndex { get { return playerIndex; } }
+
+	public int CurrentZoneIndex { get; set; }
+
+	private bool CanDrop()
+	{
+		return CurrentZoneIndex == playerIndex;
+	}
 
 	void Update ()
 	{

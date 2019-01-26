@@ -153,7 +153,7 @@ public class InputManager : MonoBehaviour
 	{
 		if (m_isPaused == false && IsListeningToInput == true && playerIndex < m_inputSettings.PlayerInputSetting.Length)
 		{
-			string buttonName = buttonName = m_inputSettings.PlayerInputSetting[playerIndex].GetButtonActionButtonName(action, IsUsingXInputAndGamepadConnected(playerIndex));
+			string buttonName = m_inputSettings.PlayerInputSetting[playerIndex].GetButtonActionButtonName(action, IsUsingXInputAndGamepadConnected(playerIndex));
 
 			if (buttonName.Length > 0)
 			{
