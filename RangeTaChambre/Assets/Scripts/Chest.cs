@@ -77,8 +77,6 @@ public class Chest : MonoBehaviour {
          * 2 = B
          */
 
-        Debug.Log(Index);
-
         Toys[index].PlayerIndex = Index;
     }
 }
