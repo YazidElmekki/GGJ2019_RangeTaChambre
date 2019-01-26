@@ -16,9 +16,12 @@ public class PlayerMovement : PhysicsObject
 	[SerializeField]
 	private float moveSpeed = 5.0f;
 
+	private Animator playerAnimator;
+
 	private void Start()
 	{
 		player = GetComponent<Player>();
+		playerAnimator = GetComponent<Animator>();
 	}
 
 	protected override void ComputeVelocity()
@@ -42,13 +45,17 @@ public class PlayerMovement : PhysicsObject
 
 	private void UpdateState()
 	{
-		if (currentState == MoveState.IDLE && targetVelocity.x != 0.0f && targetVelocity.y != 0.0f)
+		if (currentState == MoveState.IDLE && (targetVelocity.x != 0.0f || targetVelocity.y != 0.0f))
 		{
 			currentState = MoveState.MOVING;
+			playerAnimator.ResetTrigger("IdleTrigger");
+			playerAnimator.SetTrigger("MoveTrigger");
 		}
-		else if (currentState == MoveState.MOVING && targetVelocity.x == 0.0f && targetVelocity.y == 0.0f)
+		else if (currentState == MoveState.MOVING && (targetVelocity.x == 0.0f && targetVelocity.y == 0.0f))
 		{
 			currentState = MoveState.IDLE;
+			playerAnimator.ResetTrigger("MoveTrigger");
+			playerAnimator.SetTrigger("IdleTrigger");
 		}
 	}
 }
