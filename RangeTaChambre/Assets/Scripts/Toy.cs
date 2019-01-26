@@ -76,25 +76,40 @@ public class Toy : MonoBehaviour, IPlayerZoneTracker
 				transform.position = throwStartPos + throwDirection * ThrowDistance;
 				state = State.DOWN;
 
-				if (FirstValidDrop && throwingPlayerIndex != PlayerIndex && CurrentZoneIndex != PlayerIndex)
-					GameManager.Instance.PlayerScored(throwingPlayerIndex, Points);
+				Collider2D[] overlapColliders = Physics2D.OverlapBoxAll(transform.position, GetComponent<BoxCollider2D>().size, 0.0f);
+
+				for (int i = 0; i < overlapColliders.Length; ++i)
+				{
+					PlayerZone playerZone = overlapColliders[i].GetComponent<PlayerZone>();
+					if (playerZone != null && playerZone.ZoneIndex == throwingPlayerIndex && FirstValidDrop)
+					{
+						GameManager.Instance.PlayerScored(throwingPlayerIndex, Points);
+						break;
+					}
+				}
 			}
 		}
     }
 
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
-		if (CurrentObjectType == ObjectType.SMALL)
+		if (CurrentObjectType == ObjectType.SMALL && state == State.THROWN)
 		{
-			if (collision.otherCollider.gameObject.tag == "Wall")
-			{
-				state = State.DOWN;
+			state = State.DOWN;
 
-				if (FirstValidDrop && throwingPlayerIndex != PlayerIndex && CurrentZoneIndex != PlayerIndex)
+			Collider2D[] overlapColliders = Physics2D.OverlapBoxAll(transform.position, GetComponent<BoxCollider2D>().size, 0.0f);
+
+			for (int i = 0; i < overlapColliders.Length; ++i)
+			{
+				PlayerZone playerZone = overlapColliders[i].GetComponent<PlayerZone>();
+				if (playerZone != null && playerZone.ZoneIndex == throwingPlayerIndex && FirstValidDrop)
+				{
 					GameManager.Instance.PlayerScored(throwingPlayerIndex, Points);
+					break;
+				}
 			}
 
-			else if (collision.otherCollider.gameObject.tag == "Player")
+			if (collision.otherCollider.gameObject.tag == "Player")
 			{
 				//TODO STUN OTHER PLAYER
 				Debug.Log("STUN");
@@ -187,4 +202,5 @@ public class Toy : MonoBehaviour, IPlayerZoneTracker
 		throwDirection = direction;
 		throwingPlayerIndex = playerIndex;
 	}
+
 }
