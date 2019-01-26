@@ -27,8 +27,11 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        Timer.Instance.DaronneIntervention += UseDaronneIntervention;
-        Timer.Instance.EndRound += UseEndRound;
+		if (Timer.Instance != null)
+		{
+			Timer.Instance.DaronneIntervention += UseDaronneIntervention;
+			Timer.Instance.EndRound += UseEndRound;
+		}
     }
 
     private void Update()

@@ -18,10 +18,21 @@ public class PlayerMovement : PhysicsObject
 
 	private Animator playerAnimator;
 
+	[Header("SD audio clips")]
+	[SerializeField]
+	private AudioClip footStepAudioClip;
+
+	[SerializeField]
+	private AudioClip slowFootStepAudioClip;
+
+
+	private AudioSource playerAudioSource;
+
 	private void Start()
 	{
 		player = GetComponent<Player>();
 		playerAnimator = GetComponent<Animator>();
+		playerAudioSource = GetComponent<AudioSource>();
 	}
 
 	protected override void ComputeVelocity()
@@ -56,6 +67,22 @@ public class PlayerMovement : PhysicsObject
 			currentState = MoveState.IDLE;
 			playerAnimator.ResetTrigger("MoveTrigger");
 			playerAnimator.SetTrigger("IdleTrigger");
+		}
+	}
+
+	private void OnFootStep()
+	{
+		if (playerAudioSource.isPlaying == false)
+		{
+			if (player.toyHasTaken != null && player.toyHasTaken.CurrentObjectType == Toy.ObjectType.BIG)
+			{
+				playerAudioSource.PlayOneShot(slowFootStepAudioClip);
+			}
+			else
+			{
+				playerAudioSource.PlayOneShot(footStepAudioClip);
+			}
+
 		}
 	}
 }
