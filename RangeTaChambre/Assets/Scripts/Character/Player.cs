@@ -59,7 +59,10 @@ public class Player : MonoBehaviour
 		{
             if (toyHasTaken != null)
             {
-				if (toyHasTaken.CanDrop())
+
+				Toy.DropResult dropResult = toyHasTaken.CanDrop();
+
+				if (dropResult == Toy.DropResult.NONE)
 				{
 					toyHasTaken.Drop();
 
@@ -91,6 +94,10 @@ public class Player : MonoBehaviour
 
 					toyHasTaken = null;
 				}
+				else if(dropResult == Toy.DropResult.CHEST)
+				{
+					Debug.Log("DROPED ON CHEST");
+				}
 			}
             else
             {
@@ -113,11 +120,10 @@ public class Player : MonoBehaviour
                     }
                 }
 
-                if (objectToPickUp != null)
+                if (objectToPickUp != null && objectToPickUp.FirstValidDrop == false)
 				{
                     objectToPickUp.Taken();
 					SetDefaultObjectPosition();
-
 				}
 			}
         }

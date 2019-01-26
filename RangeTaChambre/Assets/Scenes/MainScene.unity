@@ -775,6 +775,10 @@ Prefab:
       propertyPath: BObjectSpriteRenderer
       value: 
       objectReference: {fileID: 1619550532}
+    - target: {fileID: 1632900894167934, guid: 207615bc011f03a49bb2e5193c26d09d, type: 2}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 207615bc011f03a49bb2e5193c26d09d, type: 2}
   m_IsPrefabParent: 0
@@ -2316,6 +2320,10 @@ Prefab:
         type: 2}
       propertyPath: playerIndex
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1632900894167934, guid: 207615bc011f03a49bb2e5193c26d09d, type: 2}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 207615bc011f03a49bb2e5193c26d09d, type: 2}

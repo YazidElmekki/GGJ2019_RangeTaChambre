@@ -50,7 +50,14 @@ public class Toy : MonoBehaviour
         //    transform.position = GameManager.Instance.GetPlayer(PlayerIndex).transform.position;
     }
 
-	public bool CanDrop()
+	public enum DropResult
+	{
+		CHEST,
+		NONE,
+		ON_COLLIDER
+	}
+
+	public DropResult CanDrop()
 	{
 		Collider2D[] colliders = Physics2D.OverlapBoxAll(transform.position, GetComponent<BoxCollider2D>().size, 0.0f);
 
@@ -58,6 +65,9 @@ public class Toy : MonoBehaviour
 		
 		for (int i = 0; i < colliders.Length; ++i)
 		{
+			if ((colliders[i].gameObject.tag == "PlayerOneChest" && PlayerIndex == 0) || (colliders[i].gameObject.tag == "PlayerTwoChest" && PlayerIndex == 1))
+				return DropResult.CHEST;
+
 			if (colliders[i].gameObject != gameObject && colliders[i].gameObject.layer != LayerMask.NameToLayer("PlayerZone") && colliders[i].gameObject != GameManager.Instance.GetPlayer(PlayerIndex).gameObject && colliders[i].isTrigger == false)
 			{
 				Debug.Log("Collider : " + colliders[i].gameObject.name);
@@ -67,10 +77,10 @@ public class Toy : MonoBehaviour
 
 		if (otherCollider == 0)
 		{
-			return true;
+			return DropResult.NONE;
 		}
 
-		return false;
+		return DropResult.ON_COLLIDER;
 	}
 
     public void Taken()
