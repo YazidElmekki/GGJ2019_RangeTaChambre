@@ -39,6 +39,8 @@ public class Toy : MonoBehaviour
 	void Start()
     {
         state = State.DOWN;
+
+        GetComponent<Collider2D>().enabled = false;
     }
 
     // Update is called once per frame
@@ -74,14 +76,8 @@ public class Toy : MonoBehaviour
     {
         state = State.CARRIED;
 
-		////if (objectType == ObjectType.BIG)
-		//{
-		//	if (PlayerIndex == 0)
-		//		gameObject.layer = LayerMask.NameToLayer("BigToyPlayer1");
-		//	else
-		//		gameObject.layer = LayerMask.NameToLayer("BigToyPlayer2");
-		//}
-	}
+        GameManager.Instance.GetPlayer(PlayerIndex).toyHasTaken = GetComponent<Toy>();
+    }
 
     public void Drop()
     {
@@ -89,5 +85,6 @@ public class Toy : MonoBehaviour
 
 		if (objectType == ObjectType.BIG)
 			GetComponent<Collider2D>().enabled = true;
-	}
+    }
+
 }

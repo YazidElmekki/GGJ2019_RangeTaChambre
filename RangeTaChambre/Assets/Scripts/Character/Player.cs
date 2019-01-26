@@ -9,10 +9,12 @@ public class Player : MonoBehaviour
     [SerializeField]
     private Chest chest;
 	public Chest AssignedChest { get { return chest; } }
+    [SerializeField]
+    float sizeToPickUpObject = 5;
 
     public Toy toyHasTaken;
 
-	public int PlayerIndex { get { return playerIndex; } }
+    public int PlayerIndex { get { return playerIndex; } }
 
 	public int CurrentZoneIndex { get; set; }
 
@@ -70,7 +72,32 @@ public class Player : MonoBehaviour
 					toyHasTaken = null;
 				}
 			}
-		}
+            else
+            {
+                GameObject[] objects;
+
+                objects = GameObject.FindGameObjectsWithTag("Toy");
+                Toy objectToPickUp = null;
+                Vector3 newDistance = new Vector3(10, 10, 10);
+                foreach (GameObject Object in objects)
+                {
+                    Vector3 distance;
+
+                    distance = Object.transform.position - transform.position;
+
+                    if (distance.magnitude < newDistance.magnitude && distance.magnitude < sizeToPickUpObject)
+                    {
+                        newDistance = distance;
+
+                        objectToPickUp = Object.gameObject.GetComponent<Toy>();
+                    }
+                }
+
+                if (objectToPickUp != null)
+                    objectToPickUp.Taken();
+            }
+        }
+
 
 		UpdateObjectPosition();
 	}
