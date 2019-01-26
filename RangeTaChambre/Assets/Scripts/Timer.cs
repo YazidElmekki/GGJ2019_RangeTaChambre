@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class Timer : MonoBehaviour {
 
@@ -10,25 +11,66 @@ public class Timer : MonoBehaviour {
     [SerializeField]
     Text timer;
 
+    private static Timer instance;
+
+    public static Timer Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = new Timer();
+            }
+
+            return instance;
+        }
+    }
+
+    public event Action DaronneIntervention;
+    public event Action EndRound;
+
     float MiRound;
     float ChangingMiRound;
+    int IntMiRound;
+    bool HalfTime;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         MiRound = RoundTimer / 2;
         ChangingMiRound = MiRound;
+        IntMiRound = (int)ChangingMiRound;
+        HalfTime = false;
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        ChangingMiRound -= Time.deltaTime;
-        int IntMiRound = (int)ChangingMiRound;
-        timer.text = IntMiRound.ToString();
-
-        if (RoundTimer < 0)
+        if (IntMiRound > 0)
         {
-            //InterventionDaronne;
+            ChangingMiRound -= Time.deltaTime;
+            IntMiRound = (int)ChangingMiRound;
+            timer.text = IntMiRound.ToString();
+        }
+
+        else
+        {
+            if (HalfTime)
+            {
+                if (EndRound != null)
+                {
+                    EndRound();
+                };
+                return;
+            }
+
+            if (DaronneIntervention != null)
+            {
+                DaronneIntervention();
+            }
+            ChangingMiRound = MiRound;
+            IntMiRound = (int)ChangingMiRound;
+
+            HalfTime = true;
         }
     }
 }
