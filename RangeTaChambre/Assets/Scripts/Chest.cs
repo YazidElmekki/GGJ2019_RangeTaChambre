@@ -6,6 +6,8 @@ public class Chest : MonoBehaviour {
 
     [SerializeField]
     GameObject PrefabBigObject, PrefabMediumObject, PrefabSmallObject;
+    [SerializeField]
+    int Index;
 
     Toy[] Toys;
 
@@ -27,18 +29,24 @@ public class Chest : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-		
+		//if (Toys.Length < 3)
+
 	}
 
-    public void TakeObject(int indexEnum)
+    public void TakeObject(int enumObject, int playerIndex)
     {
-        //if (GameManager.Instance.GetPlayer(playerIndex).HasObject)
-        //    return;
+        if ((playerIndex != Index) || (GameManager.Instance.GetPlayer(playerIndex).HasObject))
+            return;
 
-        if (indexEnum == 1)
-        {
-            //GameManager.Instance.GetPlayer(playerIndex).HasObject = true
-        }
+        GameManager.Instance.GetPlayer(playerIndex).HasObject = true;
+
+        Toys[enumObject - 1].Taken();
+
+        GameManager.Instance.GetPlayer(playerIndex).toyHasTaken = Toys[enumObject - 1];
+
+        Toys[enumObject - 1].GetComponent<Renderer>().enabled = true;
+
+        GenerateNewObject(enumObject - 1);
     }
 
     void GenerateNewObject(int index)
@@ -48,14 +56,29 @@ public class Chest : MonoBehaviour {
         if (random < 50)
         {
             Toys[index] = Instantiate(PrefabMediumObject, transform.position, Quaternion.identity).GetComponent<Toy>();
+            Toys[index].GetComponent<Renderer>().enabled = false;
+
         }
         else if (random >= 50 && random < 75)
         {
             Toys[index] = Instantiate(PrefabSmallObject, transform.position, Quaternion.identity).GetComponent<Toy>();
+            Toys[index].GetComponent<Renderer>().enabled = false;
         }
-        else
+        else if (random >= 75)
         {
             Toys[index] = Instantiate(PrefabBigObject, transform.position, Quaternion.identity).GetComponent<Toy>();
+            Toys[index].GetComponent<Renderer>().enabled = false;
         }
+
+        /*
+         * Index :
+         * 0 = X
+         * 1 = Y
+         * 2 = B
+         */
+
+        Debug.Log(Index);
+
+        Toys[index].PlayerIndex = Index;
     }
 }
