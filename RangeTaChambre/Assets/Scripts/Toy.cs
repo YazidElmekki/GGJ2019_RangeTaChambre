@@ -39,21 +39,43 @@ public class Toy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (state == State.CARRIED)
-            transform.position = GameManager.Instance.GetPlayer(PlayerIndex).transform.position;
+        //if (state == State.CARRIED)
+        //    transform.position = GameManager.Instance.GetPlayer(PlayerIndex).transform.position;
     }
+
+	public bool CanDrop()
+	{
+		Collider2D[] colliders = Physics2D.OverlapPointAll(transform.position, LayerMask.GetMask("PlayerZone"));
+
+		int otherCollider = 0;
+		
+		for (int i = 0; i < colliders.Length; ++i)
+		{
+			if (colliders[i].gameObject != gameObject)
+			{
+				++otherCollider;
+			}
+		}
+
+		if (otherCollider == 0)
+		{
+			return true;
+		}
+
+		return false;
+	}
 
     public void Taken()
     {
         state = State.CARRIED;
 
-		//if (objectType == ObjectType.BIG)
-		{
-			if (PlayerIndex == 0)
-				gameObject.layer = LayerMask.NameToLayer("BigToyPlayer1");
-			else
-				gameObject.layer = LayerMask.NameToLayer("BigToyPlayer2");
-		}
+		////if (objectType == ObjectType.BIG)
+		//{
+		//	if (PlayerIndex == 0)
+		//		gameObject.layer = LayerMask.NameToLayer("BigToyPlayer1");
+		//	else
+		//		gameObject.layer = LayerMask.NameToLayer("BigToyPlayer2");
+		//}
 	}
 
     public void Drop()
@@ -62,10 +84,5 @@ public class Toy : MonoBehaviour
 
 		if (objectType == ObjectType.BIG)
 			GetComponent<Collider2D>().enabled = true;
-	}
-
-	private void OnTriggerExit2D(Collider2D other)
-	{
-		gameObject.layer = LayerMask.NameToLayer("BigToy");
 	}
 }
