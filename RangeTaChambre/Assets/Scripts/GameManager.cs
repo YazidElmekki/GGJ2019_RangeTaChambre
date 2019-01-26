@@ -66,6 +66,11 @@ public class GameManager : MonoBehaviour
     {
         if (player1Score == player2Score)
             return;
+
+        //if (player1Score > player2Score)
+        //    //Player1Win
+        //else
+        //    //Player2Win
         daronne.EndRound();
     }
 }
