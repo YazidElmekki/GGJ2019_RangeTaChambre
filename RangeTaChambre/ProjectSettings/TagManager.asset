@@ -16,10 +16,10 @@ TagManager:
   - Player1
   - Player2
   - Background
-  - BigObjectPlayer1
-  - BigObjectPlayer2
+  - BigToyPlayer1
+  - BigToyPlayer2
   - PlayerZone
-  - BigObject
+  - BigToy
   - 
   - 
   - 
