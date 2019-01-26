@@ -18,35 +18,75 @@ public class Player : MonoBehaviour
 
 	public int CurrentZoneIndex { get; set; }
 
-    void Update ()
+	BoxCollider2D boxCollider;
+	[SerializeField]
+	private float takenObjectAdditionalDistance = 0.25f;
+
+	private PlayerMovement playerMovement;
+
+	private void Start()
+	{
+		boxCollider = GetComponent<BoxCollider2D>();
+		playerMovement = GetComponent<PlayerMovement>();
+	}
+
+	private void SetDefaultObjectPosition()
+	{
+		Vector3 defaultDir = Vector3.down;
+		defaultDir *= Mathf.Max(boxCollider.size.x, boxCollider.size.y) + takenObjectAdditionalDistance;
+
+		toyHasTaken.transform.position = transform.position + defaultDir;
+	}
+
+	void Update ()
 	{
 		if (InputManager.Instance.GetButtonActionDown(ButtonActionEnum.TAKE_X_OBJECT, playerIndex) == true)
 		{
-            chest.TakeObject(1, playerIndex);
+            if (chest.TakeObject(1, playerIndex))
+				SetDefaultObjectPosition();
 		}
 		if (InputManager.Instance.GetButtonActionDown(ButtonActionEnum.TAKE_Y_OBJECT, playerIndex) == true)
 		{
-            chest.TakeObject(2, playerIndex);
+			if (chest.TakeObject(2, playerIndex))
+				SetDefaultObjectPosition();
 		}
 		if (InputManager.Instance.GetButtonActionDown(ButtonActionEnum.TAKE_B_OBJECT, playerIndex) == true)
 		{
-            chest.TakeObject(3, playerIndex);
+            if (chest.TakeObject(3, playerIndex))
+				SetDefaultObjectPosition();
 		}
 		if (InputManager.Instance.GetButtonActionDown(ButtonActionEnum.TRHOW_OBJECT, playerIndex) == true)
 		{
             if (HasObject)
             {
-				toyHasTaken.Drop();
-
-				if (toyHasTaken.PlayerIndex == PlayerIndex && toyHasTaken.FirstValidDrop)
+				if (toyHasTaken.CanDrop())
 				{
-					toyHasTaken.FirstValidDrop = false;
-					GameManager.Instance.PlayerScored(playerIndex, toyHasTaken.Points);
-				}
+					toyHasTaken.Drop();
 
-				toyHasTaken = null;
-				HasObject = false;
-            }
+					if (toyHasTaken.PlayerIndex == PlayerIndex && toyHasTaken.FirstValidDrop)
+					{
+						toyHasTaken.FirstValidDrop = false;
+						GameManager.Instance.PlayerScored(playerIndex, toyHasTaken.Points);
+					}
+
+					toyHasTaken = null;
+					HasObject = false;
+				}
+			}
+		}
+
+		UpdateObjectPosition();
+	}
+
+	private void UpdateObjectPosition()
+	{
+		if (toyHasTaken != null)
+		{
+			if (playerMovement.Velocity.x != 0.0f || playerMovement.Velocity.y != 0.0f)
+			{
+				Vector3 defaultDir = playerMovement.Velocity.normalized * (Mathf.Max(boxCollider.size.x, boxCollider.size.y) + takenObjectAdditionalDistance);
+				toyHasTaken.transform.position = transform.position + defaultDir;
+			}
 		}
 	}
 }

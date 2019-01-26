@@ -53,10 +53,10 @@ public class Chest : MonoBehaviour {
     {
 	}
 
-    public void TakeObject(int enumObject, int playerIndex)
+    public bool TakeObject(int enumObject, int pIndex)
     {
-        if ((playerIndex != Index) || (GameManager.Instance.GetPlayer(playerIndex).HasObject) || ((GameManager.Instance.GetPlayer(playerIndex).transform.position - transform.position).sqrMagnitude > 10))
-            return;
+        if ((playerIndex != pIndex) || (GameManager.Instance.GetPlayer(playerIndex).HasObject) || ((GameManager.Instance.GetPlayer(playerIndex).transform.position - transform.position).sqrMagnitude > 10))
+            return false;
 
         GameManager.Instance.GetPlayer(playerIndex).HasObject = true;
 
@@ -67,6 +67,7 @@ public class Chest : MonoBehaviour {
         //Toys[enumObject - 1].GetComponent<Renderer>().enabled = true;
 
         GenerateNewObject(enumObject - 1);
+		return true;
     }
 
     void GenerateNewObject(int index)
