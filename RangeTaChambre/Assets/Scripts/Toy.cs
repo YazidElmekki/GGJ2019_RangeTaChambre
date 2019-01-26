@@ -34,6 +34,8 @@ public class Toy : MonoBehaviour
     void Start()
     {
         state = State.DOWN;
+
+        GetComponent<Collider2D>().enabled = false;
     }
 
     // Update is called once per frame
