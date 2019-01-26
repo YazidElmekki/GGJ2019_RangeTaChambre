@@ -65,8 +65,28 @@ public class Player : MonoBehaviour
 
 					if (toyHasTaken.PlayerIndex == PlayerIndex && toyHasTaken.FirstValidDrop)
 					{
-						toyHasTaken.FirstValidDrop = false;
-						GameManager.Instance.PlayerScored(playerIndex, toyHasTaken.Points);
+						Collider2D[] overlapColliders = Physics2D.OverlapPointAll(toyHasTaken.transform.position);
+
+						bool canScore = false;
+
+						for (int i = 0; i < overlapColliders.Length; ++i)
+						{
+							if (overlapColliders[i].gameObject.layer == LayerMask.NameToLayer("PlayerZone"))
+							{
+								if ((playerIndex == 0 && overlapColliders[i].gameObject.name == "Player2Zone") || (playerIndex == 1 && overlapColliders[i].gameObject.name == "Player1Zone"))
+								{
+									canScore = true;
+									break;
+								}
+							}
+						}
+
+
+						if (canScore == true)
+						{
+							toyHasTaken.FirstValidDrop = false;
+							GameManager.Instance.PlayerScored(playerIndex, toyHasTaken.Points);
+						}
 					}
 
 					toyHasTaken = null;
@@ -94,8 +114,12 @@ public class Player : MonoBehaviour
                 }
 
                 if (objectToPickUp != null)
+				{
                     objectToPickUp.Taken();
-            }
+					SetDefaultObjectPosition();
+
+				}
+			}
         }
 
 

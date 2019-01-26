@@ -58,8 +58,9 @@ public class Toy : MonoBehaviour
 		
 		for (int i = 0; i < colliders.Length; ++i)
 		{
-			if (colliders[i].gameObject != gameObject && colliders[i].gameObject.layer != LayerMask.NameToLayer("PlayerZone"))
+			if (colliders[i].gameObject != gameObject && colliders[i].gameObject.layer != LayerMask.NameToLayer("PlayerZone") && colliders[i].gameObject != GameManager.Instance.GetPlayer(PlayerIndex).gameObject && colliders[i].isTrigger == false)
 			{
+				Debug.Log("Collider : " + colliders[i].gameObject.name);
 				++otherCollider;
 			}
 		}
