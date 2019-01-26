@@ -34,25 +34,14 @@ public class GameManager : MonoBehaviour
 		}
     }
 
-    private void Update()
+	public void PlayerScored(int playerIndex, int points)
 	{
-		if (Input.GetKeyDown(KeyCode.O))
-			OnPlayer1Scored(5);
+		if (playerIndex == 0)
+			player1Score += points;
+		else
+			player2Score += points;
 
-		if (Input.GetKeyDown(KeyCode.P))
-			OnPlayer2Scored(5);
-	}
-
-	public void OnPlayer1Scored(int points)
-	{
-		player1Score += points;
-		ScoreChanged?.Invoke(player1Score, player2Score);
-	}
-
-	public void OnPlayer2Scored(int points)
-	{
-		player2Score += points;
-		ScoreChanged?.Invoke(player1Score, player2Score);
+		ScoreChanged(player1Score, player2Score);
 	}
 
     void UseDaronneIntervention()

@@ -39,31 +39,43 @@ public class Player : MonoBehaviour
 		{
             if (HasObject)
             {
-                //Call Matthieru function
+				toyHasTaken.Drop();
+
+				if (toyHasTaken.PlayerIndex == PlayerIndex && toyHasTaken.FirstValidDrop)
+				{
+					toyHasTaken.FirstValidDrop = false;
+					GameManager.Instance.PlayerScored(playerIndex, toyHasTaken.Points);
+				}
+
+				toyHasTaken = null;
+				HasObject = false;
             }
 
             else
             {
-                Vector3 center = transform.position + transform.forward;
-                Vector2 size = new Vector2(2.0f, 2.0f);
-                Collider2D[] results = new Collider2D[10];
-                ContactFilter2D contactFilter = new ContactFilter2D();
-                contactFilter.layerMask = LayerMask.GetMask("BigToy");
-                Physics2D.OverlapBox(center, size, 0, contactFilter, results);
+                GameObject[] objects;
 
-                foreach (Collider2D collide in results)
+                objects = GameObject.FindGameObjectsWithTag("Toy");
+
+                foreach (GameObject Object in objects)
                 {
                     Vector3 distance;
 
-                    distance = collide.gameObject.transform.position - transform.position;
+                    distance = Object.transform.position - transform.position;
 
-                    if (distance.magnitude < newDistance.magnitude)
+                    if (distance.magnitude < newDistance.magnitude && distance.magnitude < 5)
                     {
-                        objectToPickUp = collide.gameObject.GetComponent<Toy>();
+                        newDistance = distance;
+
+                        objectToPickUp = Object.gameObject.GetComponent<Toy>();
                     }
                 }
 
+                Debug.Log("Final object = " + objectToPickUp);
+
                 objectToPickUp.Taken();
+
+                objectToPickUp = null;
             }
 		}
 	}
