@@ -2,6 +2,9 @@
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField]
+    Daronne daronne;
+
 	public static GameManager Instance
 	{
 		get
@@ -20,7 +23,13 @@ public class GameManager : MonoBehaviour
 
 	public event System.Action<int, int> ScoreChanged;
 
-	private void Update()
+    private void Start()
+    {
+        Timer.Instance.DaronneIntervention += UseDaronneIntervention;
+        Timer.Instance.EndRound += UseEndRound;
+    }
+
+    private void Update()
 	{
 		if (Input.GetKeyDown(KeyCode.O))
 			OnPlayer1Scored(5);
@@ -40,4 +49,23 @@ public class GameManager : MonoBehaviour
 		player2Score += points;
 		ScoreChanged?.Invoke(player1Score, player2Score);
 	}
+
+    void UseDaronneIntervention()
+    {
+        daronne.Intervention();
+        /*
+         * if (!PlayerOne.IsHidden)
+         *      player1Score -= x;
+         * 
+         * if (!PlayerTwo.isHidden)
+         *      player2Score -= x;
+         */
+    }
+
+    void UseEndRound()
+    {
+        if (player1Score == player2Score)
+            return;
+        daronne.EndRound();
+    }
 }

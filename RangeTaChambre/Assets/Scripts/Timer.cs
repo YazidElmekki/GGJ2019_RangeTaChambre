@@ -10,6 +10,8 @@ public class Timer : MonoBehaviour {
     float RoundTimer; // en seconde
     [SerializeField]
     Text timer;
+    [SerializeField]
+    float MinTimeDaronne; // en seconde
 
     private static Timer instance;
 
@@ -19,7 +21,7 @@ public class Timer : MonoBehaviour {
         {
             if (instance == null)
             {
-                instance = new Timer();
+                instance = FindObjectOfType<Timer>();
             }
 
             return instance;
@@ -59,14 +61,19 @@ public class Timer : MonoBehaviour {
                 if (EndRound != null)
                 {
                     EndRound();
+                    ChangingMiRound = MiRound / 2;
+                    if (ChangingMiRound <= MinTimeDaronne)
+                        ChangingMiRound = MinTimeDaronne;
+                    IntMiRound = (int)ChangingMiRound;
+
+
                 };
                 return;
             }
 
             if (DaronneIntervention != null)
-            {
                 DaronneIntervention();
-            }
+
             ChangingMiRound = MiRound;
             IntMiRound = (int)ChangingMiRound;
 

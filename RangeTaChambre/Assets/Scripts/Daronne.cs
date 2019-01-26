@@ -4,30 +4,13 @@ using UnityEngine;
 
 public class Daronne : MonoBehaviour {
 
-	// Use this for initialization
-	void Start ()
+    public void Intervention()
     {
-        //Timer.Instance.DaronneIntervention += Intervention;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-    void Intervention()
-    {
-        /*
-         * if (!PlayerOne.IsHidden)
-         *      PlayerOne.Point -= x;
-         * 
-         * if (!PlayerTwo.isHidden)
-         *      PlayerTwo.Point -= x;
-         */
+        //PlayAnim
     }
 
-    private void OnDestroy()
+    public void EndRound()
     {
-        //Timer.Instance.DaronneIntervention -= Intervention;
+        //PlayAnim
     }
 }
