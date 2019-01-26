@@ -279,7 +279,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &417825199
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2312,6 +2312,11 @@ Prefab:
       propertyPath: BObjectSpriteRenderer
       value: 
       objectReference: {fileID: 1680321651}
+    - target: {fileID: 114618350811274082, guid: 207615bc011f03a49bb2e5193c26d09d,
+        type: 2}
+      propertyPath: playerIndex
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 207615bc011f03a49bb2e5193c26d09d, type: 2}
   m_IsPrefabParent: 0
