@@ -101,6 +101,7 @@ public class Toy : MonoBehaviour
             if (PlayerIndex != chests[0].GetComponent<Chest>().playerIndex && Origin != PlayerIndex)
             {
                 Destroy(gameObject);
+                GameManager.Instance.PlayerScored(PlayerIndex, Points);
                 return;
             }
         }
@@ -110,6 +111,7 @@ public class Toy : MonoBehaviour
             if (PlayerIndex != chests[1].GetComponent<Chest>().playerIndex && Origin != PlayerIndex)
             {
                 Destroy(gameObject);
+                GameManager.Instance.PlayerScored(PlayerIndex, Points);
                 return;
             }
         }

@@ -9,7 +9,7 @@ public class Timer : MonoBehaviour {
     [SerializeField]
     float RoundTimer; // en seconde
     [SerializeField]
-    Text timer;
+    Text timerTxt;
     [SerializeField]
     float MinTimeDaronne; // en seconde
 
@@ -31,27 +31,27 @@ public class Timer : MonoBehaviour {
     public event Action DaronneIntervention;
     public event Action EndRound;
 
-    float MiRound;
-    float ChangingMiRound;
-    int IntMiRound;
+    float moitiederound;
+    float time;
+    int timeinInt;
     bool HalfTime;
 
     // Use this for initialization
     void Start () {
-        MiRound = RoundTimer / 2;
-        ChangingMiRound = MiRound;
-        IntMiRound = (int)ChangingMiRound;
+        moitiederound = RoundTimer / 2;
+        time = moitiederound;
+        timeinInt = (int)time;
         HalfTime = false;
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        if (IntMiRound > 0)
+        if (time > 0)
         {
-            ChangingMiRound -= Time.deltaTime;
-            IntMiRound = (int)ChangingMiRound;
-            timer.text = IntMiRound.ToString();
+            time -= Time.deltaTime;
+            timeinInt = (int)time;
+            timerTxt.text = timeinInt.ToString();
         }
 
         else
@@ -59,23 +59,20 @@ public class Timer : MonoBehaviour {
             if (HalfTime)
             {
                 if (EndRound != null)
-                {
                     EndRound();
-                    ChangingMiRound = MiRound / 2;
-                    if (ChangingMiRound <= MinTimeDaronne)
-                        ChangingMiRound = MinTimeDaronne;
-                    IntMiRound = (int)ChangingMiRound;
 
+                time = moitiederound / 2;
 
-                };
+                if (time <= MinTimeDaronne)
+                    time = MinTimeDaronne;
+
                 return;
             }
 
             if (DaronneIntervention != null)
                 DaronneIntervention();
 
-            ChangingMiRound = MiRound;
-            IntMiRound = (int)ChangingMiRound;
+            time = moitiederound;
 
             HalfTime = true;
         }
