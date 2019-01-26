@@ -32,7 +32,19 @@ public class Chest : MonoBehaviour {
     GameObject YObjectPos;
     GameObject BObjectPos;
 
-    int random;
+	[SerializeField]
+	private SpriteRenderer XObjectSpriteRenderer;
+
+	[SerializeField]
+	private SpriteRenderer YObjectSpriteRenderer;
+
+	[SerializeField]
+	private SpriteRenderer BObjectSpriteRenderer;
+
+	[SerializeField]
+	private GameObject objectPopin;
+
+	int random;
 
     // Use this for initialization
     void Start ()
@@ -53,20 +65,20 @@ public class Chest : MonoBehaviour {
     {
 	}
 
-    public void TakeObject(int enumObject, int playerIndex)
+    public bool TakeObject(int enumObject, int pIndex)
     {
-        if ((playerIndex != this.playerIndex) || (GameManager.Instance.GetPlayer(playerIndex).HasObject) || ((GameManager.Instance.GetPlayer(playerIndex).transform.position - transform.position).sqrMagnitude > 10))
-            return;
-
-        GameManager.Instance.GetPlayer(playerIndex).HasObject = true;
+        if ((playerIndex != pIndex) || (GameManager.Instance.GetPlayer(playerIndex).toyHasTaken != null) || ((GameManager.Instance.GetPlayer(playerIndex).transform.position - transform.position).sqrMagnitude > 10))
+            return false;
 
         Toys[enumObject - 1].Taken();
+		Toys[enumObject - 1].GetComponentInChildren<Renderer>().enabled = true;
 
-        GameManager.Instance.GetPlayer(playerIndex).toyHasTaken = Toys[enumObject - 1];
+		GameManager.Instance.GetPlayer(playerIndex).toyHasTaken = Toys[enumObject - 1];
 
         //Toys[enumObject - 1].GetComponent<Renderer>().enabled = true;
 
         GenerateNewObject(enumObject - 1); // Doit rajouter les objets dans le coffre apres en avoir pris un, a playtester !!
+		return true;
     }
 
     void GenerateNewObject(int index)
@@ -95,7 +107,21 @@ public class Chest : MonoBehaviour {
          * 2 = B
          */
 
+		if (index == 0)
+		{
+			XObjectSpriteRenderer.sprite = Toys[index].ToySprite;
+		}
+		else if (index == 1)
+		{
+			YObjectSpriteRenderer.sprite = Toys[index].ToySprite;
+		}
+		else if (index == 2)
+		{
+			BObjectSpriteRenderer.sprite = Toys[index].ToySprite;
+		}
+
         Toys[index].PlayerIndex = playerIndex;
+		Toys[index].GetComponentInChildren<Renderer>().enabled = false;
     }
 
 	private void OnTriggerEnter2D(Collider2D collision)
@@ -108,6 +134,7 @@ public class Chest : MonoBehaviour {
 			{
 				spriteRenderer.sprite = openSprite;
 				chestAudioSource.PlayOneShot(openChestAudioClip);
+				objectPopin.SetActive(true);
 			}
 		}
 	}
@@ -122,6 +149,7 @@ public class Chest : MonoBehaviour {
 			{
 				spriteRenderer.sprite = closedSprite;
 				chestAudioSource.PlayOneShot(closedChestAudioClip);
+				objectPopin.SetActive(false);
 			}
 		}
 	}

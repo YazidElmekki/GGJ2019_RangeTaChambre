@@ -9,61 +9,83 @@ public class Player : MonoBehaviour
     [SerializeField]
     private Chest chest;
 	public Chest AssignedChest { get { return chest; } }
+    [SerializeField]
+    float sizeToPickUpObject = 5;
 
     public Toy toyHasTaken;
-    Toy objectToPickUp;
 
     public int PlayerIndex { get { return playerIndex; } }
 
-    public bool HasObject = false;
-
 	public int CurrentZoneIndex { get; set; }
 
-    Vector3 newDistance = new Vector3(10, 10, 10);
+	BoxCollider2D boxCollider;
+	[SerializeField]
+	private float takenObjectAdditionalDistance = 0.25f;
 
-    void Update ()
+	private PlayerMovement playerMovement;
+
+	private void Start()
+	{
+		boxCollider = GetComponent<BoxCollider2D>();
+		playerMovement = GetComponent<PlayerMovement>();
+	}
+
+	private void SetDefaultObjectPosition()
+	{
+		Vector3 defaultDir = Vector3.down;
+		defaultDir *= Mathf.Max(boxCollider.size.x, boxCollider.size.y) + takenObjectAdditionalDistance;
+
+		toyHasTaken.transform.position = transform.position + defaultDir;
+	}
+
+	void Update ()
 	{
 		if (InputManager.Instance.GetButtonActionDown(ButtonActionEnum.TAKE_X_OBJECT, playerIndex) == true)
 		{
-            chest.TakeObject(1, playerIndex);
+            if (chest.TakeObject(1, playerIndex))
+				SetDefaultObjectPosition();
 		}
 		if (InputManager.Instance.GetButtonActionDown(ButtonActionEnum.TAKE_Y_OBJECT, playerIndex) == true)
 		{
-            chest.TakeObject(2, playerIndex);
+			if (chest.TakeObject(2, playerIndex))
+				SetDefaultObjectPosition();
 		}
 		if (InputManager.Instance.GetButtonActionDown(ButtonActionEnum.TAKE_B_OBJECT, playerIndex) == true)
 		{
-            chest.TakeObject(3, playerIndex);
+            if (chest.TakeObject(3, playerIndex))
+				SetDefaultObjectPosition();
 		}
 		if (InputManager.Instance.GetButtonActionDown(ButtonActionEnum.TRHOW_OBJECT, playerIndex) == true)
 		{
-            if (HasObject)
+            if (toyHasTaken != null)
             {
-				toyHasTaken.Drop();
-
-				if (toyHasTaken.PlayerIndex == PlayerIndex && toyHasTaken.FirstValidDrop)
+				if (toyHasTaken.CanDrop())
 				{
-					toyHasTaken.FirstValidDrop = false;
-					GameManager.Instance.PlayerScored(playerIndex, toyHasTaken.Points);
+					toyHasTaken.Drop();
+
+					if (toyHasTaken.PlayerIndex == PlayerIndex && toyHasTaken.FirstValidDrop)
+					{
+						toyHasTaken.FirstValidDrop = false;
+						GameManager.Instance.PlayerScored(playerIndex, toyHasTaken.Points);
+					}
+
+					toyHasTaken = null;
 				}
-
-				toyHasTaken = null;
-				HasObject = false;
-            }
-
+			}
             else
             {
                 GameObject[] objects;
 
                 objects = GameObject.FindGameObjectsWithTag("Toy");
-
+                Toy objectToPickUp = null;
+                Vector3 newDistance = new Vector3(10, 10, 10);
                 foreach (GameObject Object in objects)
                 {
                     Vector3 distance;
 
                     distance = Object.transform.position - transform.position;
 
-                    if (distance.magnitude < newDistance.magnitude && distance.magnitude < 5)
+                    if (distance.magnitude < newDistance.magnitude && distance.magnitude < sizeToPickUpObject)
                     {
                         newDistance = distance;
 
@@ -71,12 +93,24 @@ public class Player : MonoBehaviour
                     }
                 }
 
-                Debug.Log("Final object = " + objectToPickUp);
-
-                objectToPickUp.Taken();
-
-                objectToPickUp = null;
+                if (objectToPickUp != null)
+                    objectToPickUp.Taken();
             }
+        }
+
+
+		UpdateObjectPosition();
+	}
+
+	private void UpdateObjectPosition()
+	{
+		if (toyHasTaken != null)
+		{
+			if (playerMovement.Velocity.x != 0.0f || playerMovement.Velocity.y != 0.0f)
+			{
+				Vector3 defaultDir = playerMovement.Velocity.normalized * (Mathf.Max(boxCollider.size.x, boxCollider.size.y) + takenObjectAdditionalDistance);
+				toyHasTaken.transform.position = transform.position + defaultDir;
+			}
 		}
 	}
 }

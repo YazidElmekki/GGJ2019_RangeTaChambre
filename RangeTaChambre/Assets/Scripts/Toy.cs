@@ -30,8 +30,13 @@ public class Toy : MonoBehaviour
 
     State state;
 
-    // Use this for initialization
-    void Start()
+	[SerializeField]
+	private Sprite toySprite;
+	public Sprite ToySprite { get { return toySprite; } }
+
+
+	// Use this for initialization
+	void Start()
     {
         state = State.DOWN;
 
@@ -41,23 +46,36 @@ public class Toy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (state == State.CARRIED)
-            transform.position = GameManager.Instance.GetPlayer(PlayerIndex).transform.position;
+        //if (state == State.CARRIED)
+        //    transform.position = GameManager.Instance.GetPlayer(PlayerIndex).transform.position;
     }
+
+	public bool CanDrop()
+	{
+		Collider2D[] colliders = Physics2D.OverlapPointAll(transform.position, LayerMask.GetMask("PlayerZone"));
+
+		int otherCollider = 0;
+		
+		for (int i = 0; i < colliders.Length; ++i)
+		{
+			if (colliders[i].gameObject != gameObject)
+			{
+				++otherCollider;
+			}
+		}
+
+		if (otherCollider == 0)
+		{
+			return true;
+		}
+
+		return false;
+	}
 
     public void Taken()
     {
         state = State.CARRIED;
 
-		//if (objectType == ObjectType.BIG)
-		{
-			if (PlayerIndex == 0)
-				gameObject.layer = LayerMask.NameToLayer("BigToyPlayer1");
-			else
-				gameObject.layer = LayerMask.NameToLayer("BigToyPlayer2");
-		}
-
-        GameManager.Instance.GetPlayer(PlayerIndex).HasObject = true;
         GameManager.Instance.GetPlayer(PlayerIndex).toyHasTaken = GetComponent<Toy>();
     }
 
@@ -69,8 +87,4 @@ public class Toy : MonoBehaviour
 			GetComponent<Collider2D>().enabled = true;
     }
 
-	private void OnTriggerExit2D(Collider2D other)
-	{
-		gameObject.layer = LayerMask.NameToLayer("BigToy");
-	}
 }
