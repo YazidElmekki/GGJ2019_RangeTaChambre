@@ -7,7 +7,7 @@ public class PlayerZone : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-		Player player = other.GetComponent<Player>();
-		player.CurrentZoneIndex = zoneIndex;
+		IPlayerZoneTracker trackedObject = other.GetComponent<IPlayerZoneTracker>();
+		trackedObject.CurrentZoneIndex = zoneIndex;
 	}
 }

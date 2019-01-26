@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Toy : MonoBehaviour
+public class Toy : MonoBehaviour, IPlayerZoneTracker
 {
 	public enum ObjectType
 	{
@@ -15,6 +15,7 @@ public class Toy : MonoBehaviour
 	{
 		CARRIED = 0,
 		DOWN,
+		THROWN
 	}
 
 	[SerializeField]
@@ -26,6 +27,21 @@ public class Toy : MonoBehaviour
 
     public bool FirstValidDrop = true;
     public int PlayerIndex { get; set; }
+
+	public int CurrentZoneIndex
+	{
+		get;
+		set;
+	}
+
+	[SerializeField]
+	float ThrowDistance = 5;
+	[SerializeField]
+	float throwSpeed = 10f;
+	Vector3 throwStartPos;
+	Vector3 throwDirection;
+	int throwingPlayerIndex;
+
     public int Points;
 
     public bool IsInChest = true;
@@ -51,9 +67,42 @@ public class Toy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (state == State.CARRIED)
-        //    transform.position = GameManager.Instance.GetPlayer(PlayerIndex).transform.position;
+		if (state == State.THROWN)
+		{
+			transform.position += throwDirection * Time.deltaTime * throwSpeed;
+
+			if (Vector3.Distance(transform.position, throwStartPos) > ThrowDistance)
+			{
+				transform.position = throwStartPos + throwDirection * ThrowDistance;
+				state = State.DOWN;
+
+				if (FirstValidDrop && throwingPlayerIndex != PlayerIndex && CurrentZoneIndex != PlayerIndex)
+					GameManager.Instance.PlayerScored(throwingPlayerIndex, Points);
+			}
+		}
     }
+
+	private void OnCollisionEnter2D(Collision2D collision)
+	{
+		if (CurrentObjectType == ObjectType.SMALL)
+		{
+			if (collision.otherCollider.gameObject.tag == "Wall")
+			{
+				state = State.DOWN;
+
+				if (FirstValidDrop && throwingPlayerIndex != PlayerIndex && CurrentZoneIndex != PlayerIndex)
+					GameManager.Instance.PlayerScored(throwingPlayerIndex, Points);
+			}
+
+			else if (collision.otherCollider.gameObject.tag == "Player")
+			{
+				//TODO STUN OTHER PLAYER
+				Debug.Log("STUN");
+
+				Destroy(gameObject);
+			}
+		}
+	}
 
 	public enum DropResult
 	{
@@ -126,6 +175,16 @@ public class Toy : MonoBehaviour
 
         if (objectType == ObjectType.BIG)
 			GetComponent<Collider2D>().enabled = true;
-    }
+	}
 
+	public void Throw(Vector3 direction, int playerIndex)
+	{
+		state = State.THROWN;
+
+		GetComponent<Collider2D>().enabled = true;
+
+		throwStartPos = transform.position;
+		throwDirection = direction;
+		throwingPlayerIndex = playerIndex;
+	}
 }

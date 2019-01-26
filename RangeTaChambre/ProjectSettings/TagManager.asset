@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Toy
   - Chest
+  - Wall
   layers:
   - Default
   - TransparentFX

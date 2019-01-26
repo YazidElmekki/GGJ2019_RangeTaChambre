@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IPlayerZoneTracker
 {
 	[SerializeField, Range(0f, 1f)]
 	private int playerIndex = 0;
@@ -64,7 +64,15 @@ public class Player : MonoBehaviour
 
 				if (dropResult == Toy.DropResult.NONE)
 				{
-					toyHasTaken.Drop();
+					if (toyHasTaken.CurrentObjectType == Toy.ObjectType.SMALL)
+					{
+						Vector3 throwDir = toyHasTaken.transform.position - transform.position;
+						throwDir.Normalize();
+
+						toyHasTaken.Throw(throwDir, PlayerIndex);
+					}
+					else
+						toyHasTaken.Drop();
 
 					if (toyHasTaken.PlayerIndex == PlayerIndex && toyHasTaken.FirstValidDrop)
 					{
