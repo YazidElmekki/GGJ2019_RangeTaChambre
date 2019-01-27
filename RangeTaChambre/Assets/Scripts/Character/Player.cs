@@ -92,7 +92,7 @@ public class Player : MonoBehaviour, IPlayerZoneTracker
 							{
 								if (overlapColliders[i].gameObject.layer == LayerMask.NameToLayer("PlayerZone"))
 								{
-									if ((playerIndex == 0 && overlapColliders[i].gameObject.name == "Player2Zone") || (playerIndex == 1 && overlapColliders[i].gameObject.name == "Player1Zone"))
+									if ((playerIndex == 0 && overlapColliders[i].gameObject.name == "Player1Zone") || (playerIndex == 1 && overlapColliders[i].gameObject.name == "Player2Zone"))
 									{
 										canScore = true;
 										break;
@@ -122,13 +122,11 @@ public class Player : MonoBehaviour, IPlayerZoneTracker
 				{
 					if (Vector3.Distance(transform.position, bed.transform.position) < distanceToHide)
 					{
-						//////////
 						bed.GetComponent<Collider2D>().enabled = false;
 						transform.position = bed.transform.position;
 						isHidden = true;
 
 						playerMovement.Hide(bed, bed.GetComponent<BedWakeUpZone>().WakeUpZone);
-						//////////
 					}
 					else
 					{
