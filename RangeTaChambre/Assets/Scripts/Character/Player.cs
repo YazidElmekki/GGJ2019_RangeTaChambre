@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IPlayerZoneTracker
 {
 	[SerializeField, Range(0f, 1f)]
 	private int playerIndex = 0;
@@ -59,9 +59,20 @@ public class Player : MonoBehaviour
 		{
             if (toyHasTaken != null)
             {
-				if (toyHasTaken.CanDrop())
+
+				Toy.DropResult dropResult = toyHasTaken.CanDrop();
+
+				if (dropResult == Toy.DropResult.NONE)
 				{
-					toyHasTaken.Drop();
+					if (toyHasTaken.CurrentObjectType == Toy.ObjectType.SMALL)
+					{
+						Vector3 throwDir = toyHasTaken.transform.position - transform.position;
+						throwDir.Normalize();
+
+						toyHasTaken.Throw(throwDir, PlayerIndex);
+					}
+					else
+						toyHasTaken.Drop();
 
 					if (toyHasTaken.PlayerIndex == PlayerIndex && toyHasTaken.FirstValidDrop)
 					{
@@ -91,6 +102,10 @@ public class Player : MonoBehaviour
 
 					toyHasTaken = null;
 				}
+				else if(dropResult == Toy.DropResult.CHEST)
+				{
+					Debug.Log("DROPED ON CHEST");
+				}
 			}
             else
             {
@@ -114,8 +129,7 @@ public class Player : MonoBehaviour
                             objectToPickUp = Object.gameObject.GetComponent<Toy>();
                     }
                 }
-
-                if (objectToPickUp != null)
+                if (objectToPickUp != null && objectToPickUp.FirstValidDrop == false)
                 {
                     if (gameObject == GameManager.Instance.PlayerOne.gameObject && GameManager.Instance.PlayerTwo.toyHasTaken == objectToPickUp)
                     {
@@ -131,7 +145,7 @@ public class Player : MonoBehaviour
                 }
                 
 			}
-        }
+		}
 		UpdateObjectPosition();
 	}
 

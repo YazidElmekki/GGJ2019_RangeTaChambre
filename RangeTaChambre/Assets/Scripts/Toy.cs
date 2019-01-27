@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Toy : MonoBehaviour
+public class Toy : MonoBehaviour, IPlayerZoneTracker
 {
 	public enum ObjectType
 	{
@@ -15,6 +15,7 @@ public class Toy : MonoBehaviour
 	{
 		CARRIED = 0,
 		DOWN,
+		THROWN
 	}
 
 	[SerializeField]
@@ -26,6 +27,21 @@ public class Toy : MonoBehaviour
 
     public bool FirstValidDrop = true;
     public int PlayerIndex { get; set; }
+
+	public int CurrentZoneIndex
+	{
+		get;
+		set;
+	}
+
+	[SerializeField]
+	float ThrowDistance = 5;
+	[SerializeField]
+	float throwSpeed = 10f;
+	Vector3 throwStartPos;
+	Vector3 throwDirection;
+	int throwingPlayerIndex;
+
     public int Points;
 
     public bool IsInChest = true;
@@ -51,11 +67,77 @@ public class Toy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (state == State.CARRIED)
-        //    transform.position = GameManager.Instance.GetPlayer(PlayerIndex).transform.position;
+		if (state == State.THROWN)
+		{
+			transform.position += throwDirection * Time.deltaTime * throwSpeed;
+
+			if (Vector3.Distance(transform.position, throwStartPos) > ThrowDistance)
+			{
+				transform.position = throwStartPos + throwDirection * ThrowDistance;
+				state = State.DOWN;
+
+				Collider2D[] overlapColliders = Physics2D.OverlapBoxAll(transform.position, GetComponent<BoxCollider2D>().size * 1.25f, 0.0f);
+
+				for (int i = 0; i < overlapColliders.Length; ++i)
+				{
+					PlayerZone playerZone = overlapColliders[i].GetComponent<PlayerZone>();
+					if (playerZone != null && playerZone.ZoneIndex == throwingPlayerIndex && FirstValidDrop)
+					{
+						GameManager.Instance.PlayerScored(throwingPlayerIndex, Points);
+						break;
+					}
+				}
+			}
+		}
     }
 
-	public bool CanDrop()
+	private void OnCollisionEnter2D(Collision2D collision)
+	{
+		if (CurrentObjectType == ObjectType.SMALL && state == State.THROWN)
+		{
+			state = State.DOWN;
+
+			Collider2D[] overlapColliders = Physics2D.OverlapBoxAll(transform.position, GetComponent<BoxCollider2D>().size * 1.25f, 0.0f);
+
+			bool canScore = true;
+			PlayerZone currentPlayerZone = null;
+
+			for (int i = 0; i < overlapColliders.Length; ++i)
+			{
+				if (overlapColliders[i].gameObject.tag == "Player")
+				{
+					PlayerMovement playerMovement = overlapColliders[i].gameObject.GetComponent<PlayerMovement>();
+					playerMovement.Stun();
+					Debug.Log("STUN");
+					Destroy(gameObject);
+					canScore = false;
+					break;
+				}
+				else
+				{
+					PlayerZone playerZone = overlapColliders[i].GetComponent<PlayerZone>();
+					if (playerZone != null)
+					{
+						currentPlayerZone = playerZone;
+					}
+				}
+			}
+
+			if (canScore == true && currentPlayerZone != null && currentPlayerZone.ZoneIndex == throwingPlayerIndex && FirstValidDrop)
+			{
+				GameManager.Instance.PlayerScored(throwingPlayerIndex, Points);
+			}
+		}
+	}
+
+	public enum DropResult
+	{
+		CHEST,
+		NONE,
+		ON_COLLIDER
+	}
+
+	public DropResult CanDrop()
 	{
 		Collider2D[] colliders = Physics2D.OverlapBoxAll(transform.position, GetComponent<BoxCollider2D>().size, 0.0f);
 
@@ -63,6 +145,9 @@ public class Toy : MonoBehaviour
 		
 		for (int i = 0; i < colliders.Length; ++i)
 		{
+			if ((colliders[i].gameObject.tag == "PlayerOneChest" && PlayerIndex == 0) || (colliders[i].gameObject.tag == "PlayerTwoChest" && PlayerIndex == 1))
+				return DropResult.CHEST;
+
 			if (colliders[i].gameObject != gameObject && colliders[i].gameObject.layer != LayerMask.NameToLayer("PlayerZone") && colliders[i].gameObject != GameManager.Instance.GetPlayer(PlayerIndex).gameObject && colliders[i].isTrigger == false)
 			{
 				Debug.Log("Collider : " + colliders[i].gameObject.name);
@@ -72,10 +157,10 @@ public class Toy : MonoBehaviour
 
 		if (otherCollider == 0)
 		{
-			return true;
+			return DropResult.NONE;
 		}
 
-		return false;
+		return DropResult.ON_COLLIDER;
 	}
 
     public void Taken(int playerIndex)
@@ -118,6 +203,17 @@ public class Toy : MonoBehaviour
 
         if (objectType == ObjectType.BIG)
 			GetComponent<Collider2D>().enabled = true;
-    }
+	}
+
+	public void Throw(Vector3 direction, int playerIndex)
+	{
+		state = State.THROWN;
+
+		GetComponent<Collider2D>().enabled = true;
+
+		throwStartPos = transform.position;
+		throwDirection = direction;
+		throwingPlayerIndex = playerIndex;
+	}
 
 }

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class PlayerMovement : PhysicsObject
 {
@@ -8,7 +9,8 @@ public class PlayerMovement : PhysicsObject
 	{
 		NO_MOVE,
 		IDLE,
-		MOVING
+		MOVING,
+		STUN
 	}
 
 	private MoveState currentState = MoveState.IDLE;
@@ -18,6 +20,10 @@ public class PlayerMovement : PhysicsObject
 
 	private Animator playerAnimator;
 
+	[SerializeField]
+	private float stunTime = 3.0f;
+	private Coroutine stunCouroutine = null;
+
 	[Header("SD audio clips")]
 	[SerializeField]
 	private AudioClip footStepAudioClip;
@@ -25,6 +31,8 @@ public class PlayerMovement : PhysicsObject
 	[SerializeField]
 	private AudioClip slowFootStepAudioClip;
 
+	[SerializeField]
+	private AudioClip stunAudioClip;
 
 	private AudioSource playerAudioSource;
 
@@ -37,7 +45,7 @@ public class PlayerMovement : PhysicsObject
 
 	protected override void ComputeVelocity()
 	{
-		if (currentState != MoveState.NO_MOVE)
+		if (currentState != MoveState.NO_MOVE && currentState != MoveState.STUN)
 		{
 			Vector2 move = Vector2.zero;
 
@@ -83,5 +91,28 @@ public class PlayerMovement : PhysicsObject
 			}
 
 		}
+	}
+
+	public void Stun()
+	{
+		if (stunCouroutine == null && currentState != MoveState.STUN)
+		{
+			if (currentState == MoveState.MOVING)
+			{
+				playerAnimator.ResetTrigger("MoveTrigger");
+				playerAnimator.SetTrigger("IdleTrigger");
+			}
+
+			currentState = MoveState.STUN;
+			StartCoroutine(ExitFromStun());
+			playerAudioSource.PlayOneShot(stunAudioClip);
+		}
+	}
+
+	private IEnumerator ExitFromStun()
+	{
+		yield return new WaitForSeconds(stunTime);
+		currentState = MoveState.IDLE;
+		stunCouroutine = null;
 	}
 }
