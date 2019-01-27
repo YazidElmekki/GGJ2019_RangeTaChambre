@@ -58,8 +58,7 @@ public class Player : MonoBehaviour, IPlayerZoneTracker
 		if (InputManager.Instance.GetButtonActionDown(ButtonActionEnum.TRHOW_OBJECT, playerIndex) == true)
 		{
             if (toyHasTaken != null)
-            {
-
+			{ 
 				Toy.DropResult dropResult = toyHasTaken.CanDrop();
 
 				if (dropResult == Toy.DropResult.NONE)
@@ -104,7 +103,10 @@ public class Player : MonoBehaviour, IPlayerZoneTracker
 				}
 				else if(dropResult == Toy.DropResult.CHEST)
 				{
-					Debug.Log("DROPED ON CHEST");
+					GameManager.Instance.PlayerScored(playerIndex, toyHasTaken.Points);
+					Destroy(toyHasTaken.gameObject);
+					toyHasTaken = null;
+					return;
 				}
 			}
             else
