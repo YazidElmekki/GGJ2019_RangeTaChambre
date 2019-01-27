@@ -143,7 +143,7 @@ public class Toy : MonoBehaviour, IPlayerZoneTracker
 
 	public DropResult CanDrop()
 	{
-		Collider2D[] colliders = Physics2D.OverlapBoxAll(transform.position, GetComponent<BoxCollider2D>().size, 0.0f);
+		Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, GetComponent<CircleCollider2D>().radius);
 
 		int otherCollider = 0;
 		
@@ -159,7 +159,7 @@ public class Toy : MonoBehaviour, IPlayerZoneTracker
 				}
 			}
 
-			if (colliders[i].gameObject != gameObject && colliders[i].gameObject.layer != LayerMask.NameToLayer("PlayerZone") && colliders[i].gameObject != GameManager.Instance.GetPlayer(PlayerIndex).gameObject && colliders[i].isTrigger == false)
+			if (colliders[i].gameObject != gameObject && colliders[i].gameObject.layer != LayerMask.NameToLayer("PlayerZone") && colliders[i].gameObject != GameManager.Instance.GetPlayer(PlayerIndex).gameObject)
 			{
 				Debug.Log("Collider : " + colliders[i].gameObject.name);
 				++otherCollider;
