@@ -29,6 +29,20 @@ public class GameManager : MonoBehaviour
 	[SerializeField]
 	private Text winText;
 
+	[Header("SD sound")]
+	[SerializeField]
+	private AudioClip scorePointAudioClip;
+
+	[SerializeField]
+	private AudioClip loosePointAudioClip;
+
+	[SerializeField]
+	private AudioClip playerWinSFX;
+
+	[SerializeField]
+	AudioSource SFXAudioSource;
+
+
 	public static GameManager Instance
 	{
 		get
@@ -49,6 +63,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+		SFXAudioSource = GetComponent<AudioSource>();
+
 		if (Timer.Instance != null)
 		{
 			Timer.Instance.DaronneIntervention += UseDaronneIntervention;
@@ -58,12 +74,24 @@ public class GameManager : MonoBehaviour
 
 	private void Update()
 	{
-		player1ScoreText.text = "P1 : " + player1Score;
-		player2ScoreText.text = "P2 : " + player2Score;
+		player1ScoreText.text = "Red : " + player1Score;
+		player2ScoreText.text = "Blue : " + player2Score;
 	}
 
 	public void PlayerScored(int playerIndex, int points)
 	{
+		if (SFXAudioSource.isPlaying == false)
+		{
+			if (points > 0)
+			{
+				SFXAudioSource.PlayOneShot(scorePointAudioClip);
+			}
+			else if (points < 0)
+			{
+				SFXAudioSource.PlayOneShot(loosePointAudioClip);
+			}
+		}
+
 		if (playerIndex == 0)
 			player1Score += points;
 		else

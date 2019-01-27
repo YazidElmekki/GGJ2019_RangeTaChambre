@@ -33,8 +33,19 @@ public class Player : MonoBehaviour, IPlayerZoneTracker
 
 	Animator playerAnimator;
 
+	[Header("SD audio clips")]
+	[SerializeField]
+	private AudioClip dropAudioClip;
+	[SerializeField]
+	private AudioClip throwAudioClip;
+
+
+	private AudioSource playerAudioSource;
+
+
 	private void Start()
 	{
+		playerAudioSource = GetComponent<AudioSource>();
 		boxCollider = GetComponent<BoxCollider2D>();
 		playerMovement = GetComponent<PlayerMovement>();
 		playerAnimator = GetComponent<Animator>();
@@ -57,7 +68,7 @@ public class Player : MonoBehaviour, IPlayerZoneTracker
 		}
 	}
 
-	void Update ()
+	void Update()
 	{
 		if (playerMovement.CurrentState == PlayerMovement.MoveState.IDLE || playerMovement.CurrentState == PlayerMovement.MoveState.MOVING)
 		{
@@ -88,13 +99,18 @@ public class Player : MonoBehaviour, IPlayerZoneTracker
 
 						if (toyHasTaken.CurrentObjectType == Toy.ObjectType.SMALL)
 						{
+							playerAudioSource.PlayOneShot(throwAudioClip);
+
 							Vector3 throwDir = toyHasTaken.transform.position - transform.position;
 							throwDir.Normalize();
 
 							toyHasTaken.Throw(throwDir, PlayerIndex);
 						}
 						else
+						{
+							playerAudioSource.PlayOneShot(dropAudioClip);
 							toyHasTaken.Drop();
+						}
 
 						if (toyHasTaken.PlayerIndex == PlayerIndex && toyHasTaken.FirstValidDrop)
 						{
@@ -106,7 +122,7 @@ public class Player : MonoBehaviour, IPlayerZoneTracker
 							{
 								if (overlapColliders[i].gameObject.layer == LayerMask.NameToLayer("PlayerZone"))
 								{
-									if ((playerIndex == 0 && overlapColliders[i].gameObject.name == "Player1Zone") || (playerIndex == 1 && overlapColliders[i].gameObject.name == "Player2Zone"))
+									if ((playerIndex == 0 && overlapColliders[i].gameObject.name == "Player1Zone" && playerIndex == toyHasTaken.originalPlayerIndex) || (playerIndex == 1 && overlapColliders[i].gameObject.name == "Player2Zone" && playerIndex == toyHasTaken.originalPlayerIndex))
 									{
 										canScore = true;
 										break;
