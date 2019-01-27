@@ -91,6 +91,14 @@ public class Toy : MonoBehaviour, IPlayerZoneTracker
 				}
 			}
 		}
+
+        if (objectType == ObjectType.BIG)
+        {
+            if ((GameManager.Instance.GetPlayer(0).transform.position.y > transform.position.y) || (GameManager.Instance.GetPlayer(1).transform.position.y > transform.position.y))
+                GetComponent<SpriteRenderer>().sortingOrder = 11;
+            else
+                GetComponent<SpriteRenderer>().sortingOrder = 2;
+        }
     }
 
 	private void OnCollisionEnter2D(Collision2D collision)
@@ -153,7 +161,7 @@ public class Toy : MonoBehaviour, IPlayerZoneTracker
 			{
 				Chest chest = colliders[i].GetComponent<Chest>();
 
-				if (chest.playerIndex != PlayerIndex && FirstValidDrop == false)
+				if (chest.playerIndex == PlayerIndex && FirstValidDrop == false)
 				{
 					return DropResult.CHEST;
 				}
@@ -182,6 +190,9 @@ public class Toy : MonoBehaviour, IPlayerZoneTracker
         IsInChest = false;
 
         GameManager.Instance.GetPlayer(PlayerIndex).toyHasTaken = GetComponent<Toy>();
+
+        if (objectType == ObjectType.BIG)
+            GetComponent<Collider2D>().enabled = false;
     }
 
     public void Drop()
