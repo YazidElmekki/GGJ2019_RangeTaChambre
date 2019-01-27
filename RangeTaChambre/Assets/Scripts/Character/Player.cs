@@ -11,6 +11,10 @@ public class Player : MonoBehaviour, IPlayerZoneTracker
 	public Chest AssignedChest { get { return chest; } }
     [SerializeField]
     float sizeToPickUpObject = 5;
+    [SerializeField]
+    Bed bed;
+
+    public bool isHidden = false;
 
     public Toy toyHasTaken;
 
@@ -111,6 +115,19 @@ public class Player : MonoBehaviour, IPlayerZoneTracker
 			}
             else
             {
+                //////////
+
+               if (Physics2D.Raycast(transform.position, bed.transform.position, 1.0f))
+               {
+                    bed.GetComponent<Collider2D>().enabled = false;
+                    transform.position = bed.transform.position;
+                    isHidden = true;
+
+                    StartCoroutine(TimeToHidden(2.0f));
+                }
+
+                //////////
+
                 GameObject[] objects;
 
                 objects = GameObject.FindGameObjectsWithTag("Toy");
@@ -131,7 +148,7 @@ public class Player : MonoBehaviour, IPlayerZoneTracker
                             objectToPickUp = Object.gameObject.GetComponent<Toy>();
                     }
                 }
-                if (objectToPickUp != null && objectToPickUp.FirstValidDrop == false)
+                if (objectToPickUp != null)// && objectToPickUp.FirstValidDrop == false)
                 {
                     if (gameObject == GameManager.Instance.PlayerOne.gameObject && GameManager.Instance.PlayerTwo.toyHasTaken == objectToPickUp)
                     {
@@ -162,4 +179,13 @@ public class Player : MonoBehaviour, IPlayerZoneTracker
 			}
 		}
 	}
+
+    IEnumerator TimeToHidden(float time)
+    {
+        Debug.Log("1");
+
+        yield return new WaitForSeconds(time);
+        Debug.Log("2");
+
+    }
 }

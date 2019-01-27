@@ -15,6 +15,9 @@ public class GameManager : MonoBehaviour
 	[SerializeField]
 	private Text player2ScoreText;
 
+    [SerializeField]
+    int loossingScoreWhenDaronne = 2;
+
 	public static GameManager Instance
 	{
 		get
@@ -61,13 +64,13 @@ public class GameManager : MonoBehaviour
     void UseDaronneIntervention()
     {
         daronne.Intervention();
-        /*
-         * if (!PlayerOne.IsHidden)
-         *      player1Score -= x;
-         * 
-         * if (!PlayerTwo.isHidden)
-         *      player2Score -= x;
-         */
+
+        if (!PlayerOne.isHidden)
+            player1Score /= loossingScoreWhenDaronne;
+        
+        if (!PlayerTwo.isHidden)
+            player2Score /= loossingScoreWhenDaronne;
+
     }
 
     void UseEndRound()

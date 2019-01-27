@@ -56,7 +56,7 @@ Transform:
   m_GameObject: {fileID: 1919742811541806}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.58, y: -1.06, z: -0.0078125}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_Children:
   - {fileID: 4517025422490972}
   m_Father: {fileID: 0}
@@ -246,9 +246,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravityModifier: {x: 0, y: 0}
   moveSpeed: 5
+  stunTime: 3
   footStepAudioClip: {fileID: 8300000, guid: 18d526749434f264d819781da12e107b, type: 3}
   slowFootStepAudioClip: {fileID: 8300000, guid: 66018b9ad479a854b8260e7f4924e062,
     type: 3}
+  stunAudioClip: {fileID: 8300000, guid: 57315e6ca39e2e043ac32cfcf200aa48, type: 3}
 --- !u!114 &114517503749751054
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -262,8 +264,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerIndex: 1
   chest: {fileID: 0}
+  sizeToPickUpObject: 5
+  bed: {fileID: 0}
   toyHasTaken: {fileID: 0}
-  HasObject: 0
+  takenObjectAdditionalDistance: 0.25
 --- !u!212 &212464764499515992
 SpriteRenderer:
   m_ObjectHideFlags: 1

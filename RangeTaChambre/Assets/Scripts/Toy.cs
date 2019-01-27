@@ -188,28 +188,6 @@ public class Toy : MonoBehaviour, IPlayerZoneTracker
     {
         state = State.DOWN;
 
-        //GameObject[] chests;
-
-        //chests = GameObject.FindGameObjectsWithTag("Chest");
-
-        //if ((transform.position - chests[0].transform.position).magnitude <= distanceMinToTidyUp)
-        //{
-        //    if (PlayerIndex != chests[0].GetComponent<Chest>().playerIndex && Origin != PlayerIndex)
-        //    {
-        //        Destroy(gameObject);
-        //        return;
-        //    }
-        //}
-        
-        //else if ((transform.position - chests[1].transform.position).magnitude <= distanceMinToTidyUp)
-        //{
-        //    if (PlayerIndex != chests[1].GetComponent<Chest>().playerIndex && Origin != PlayerIndex)
-        //    {
-        //        Destroy(gameObject);
-        //        return;
-        //    }
-        //}
-
         if (objectType == ObjectType.BIG)
 			GetComponent<Collider2D>().enabled = true;
 	}
