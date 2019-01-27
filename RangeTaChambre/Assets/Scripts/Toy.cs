@@ -84,6 +84,7 @@ public class Toy : MonoBehaviour, IPlayerZoneTracker
 					if (playerZone != null && playerZone.ZoneIndex == throwingPlayerIndex && FirstValidDrop)
 					{
 						GameManager.Instance.PlayerScored(throwingPlayerIndex, Points);
+						FirstValidDrop = false;
 						break;
 					}
 				}
@@ -125,6 +126,7 @@ public class Toy : MonoBehaviour, IPlayerZoneTracker
 
 			if (canScore == true && currentPlayerZone != null && currentPlayerZone.ZoneIndex == throwingPlayerIndex && FirstValidDrop)
 			{
+				FirstValidDrop = false;
 				GameManager.Instance.PlayerScored(throwingPlayerIndex, Points);
 			}
 		}
@@ -145,8 +147,15 @@ public class Toy : MonoBehaviour, IPlayerZoneTracker
 		
 		for (int i = 0; i < colliders.Length; ++i)
 		{
-			if ((colliders[i].gameObject.tag == "PlayerOneChest" && PlayerIndex == 0) || (colliders[i].gameObject.tag == "PlayerTwoChest" && PlayerIndex == 1))
-				return DropResult.CHEST;
+			if (colliders[i].gameObject.tag == "Chest")
+			{
+				Chest chest = colliders[i].GetComponent<Chest>();
+
+				if (chest.playerIndex != PlayerIndex && FirstValidDrop == false)
+				{
+					return DropResult.CHEST;
+				}
+			}
 
 			if (colliders[i].gameObject != gameObject && colliders[i].gameObject.layer != LayerMask.NameToLayer("PlayerZone") && colliders[i].gameObject != GameManager.Instance.GetPlayer(PlayerIndex).gameObject && colliders[i].isTrigger == false)
 			{
@@ -177,29 +186,27 @@ public class Toy : MonoBehaviour, IPlayerZoneTracker
     {
         state = State.DOWN;
 
-        GameObject[] chests;
+        //GameObject[] chests;
 
-        chests = GameObject.FindGameObjectsWithTag("Chest");
+        //chests = GameObject.FindGameObjectsWithTag("Chest");
 
-        if ((transform.position - chests[0].transform.position).magnitude <= distanceMinToTidyUp)
-        {
-            if (PlayerIndex != chests[0].GetComponent<Chest>().playerIndex && Origin != PlayerIndex)
-            {
-                Destroy(gameObject);
-                GameManager.Instance.PlayerScored(PlayerIndex, Points);
-                return;
-            }
-        }
+        //if ((transform.position - chests[0].transform.position).magnitude <= distanceMinToTidyUp)
+        //{
+        //    if (PlayerIndex != chests[0].GetComponent<Chest>().playerIndex && Origin != PlayerIndex)
+        //    {
+        //        Destroy(gameObject);
+        //        return;
+        //    }
+        //}
         
-        else if ((transform.position - chests[1].transform.position).magnitude <= distanceMinToTidyUp)
-        {
-            if (PlayerIndex != chests[1].GetComponent<Chest>().playerIndex && Origin != PlayerIndex)
-            {
-                Destroy(gameObject);
-                GameManager.Instance.PlayerScored(PlayerIndex, Points);
-                return;
-            }
-        }
+        //else if ((transform.position - chests[1].transform.position).magnitude <= distanceMinToTidyUp)
+        //{
+        //    if (PlayerIndex != chests[1].GetComponent<Chest>().playerIndex && Origin != PlayerIndex)
+        //    {
+        //        Destroy(gameObject);
+        //        return;
+        //    }
+        //}
 
         if (objectType == ObjectType.BIG)
 			GetComponent<Collider2D>().enabled = true;
