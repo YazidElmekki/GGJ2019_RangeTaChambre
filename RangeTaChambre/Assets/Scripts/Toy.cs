@@ -85,6 +85,7 @@ public class Toy : MonoBehaviour, IPlayerZoneTracker
 					{
 						GameManager.Instance.PlayerScored(throwingPlayerIndex, Points);
 						FirstValidDrop = false;
+						GetComponent<Collider2D>().enabled = false;
 						break;
 					}
 				}
@@ -126,6 +127,7 @@ public class Toy : MonoBehaviour, IPlayerZoneTracker
 
 			if (canScore == true && currentPlayerZone != null && currentPlayerZone.ZoneIndex == throwingPlayerIndex && FirstValidDrop)
 			{
+				GetComponent<Collider2D>().enabled = false;
 				FirstValidDrop = false;
 				GameManager.Instance.PlayerScored(throwingPlayerIndex, Points);
 			}
