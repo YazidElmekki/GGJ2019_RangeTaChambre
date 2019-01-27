@@ -1262,6 +1262,11 @@ Prefab:
       propertyPath: winText
       value: 
       objectReference: {fileID: 1788038776}
+    - target: {fileID: 114428839134150104, guid: 56950996b46285d4cb9eda87d29b57e1,
+        type: 2}
+      propertyPath: winTime
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 56950996b46285d4cb9eda87d29b57e1, type: 2}
   m_IsPrefabParent: 0
