@@ -117,7 +117,7 @@ public class PlayerMovement : PhysicsObject
 
 			playerAnimator.SetBool("IsStun", true);
 
-			InputManager.Instance.ActivateGamepadVibration(player.PlayerIndex, 1.0f, Vector2.one * 0.25f, 0.25f);
+			InputManager.Instance.ActivateGamepadVibration(player.PlayerIndex == 0 ? 1 : 0, 1.0f, Vector2.one * 0.5f, 0.25f);
 
 			currentState = MoveState.STUN;
 			StartCoroutine(ExitFromStun());
