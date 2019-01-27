@@ -31,6 +31,11 @@ public class Timer : MonoBehaviour {
     public event Action DaronneIntervention;
     public event Action EndRound;
 
+	[SerializeField]
+	private float bedHelpRemainingTime = 5.0f;
+
+	public event Action OnShowBedHelp;
+
     float moitiederound;
     float time;
     int timeinInt;
@@ -52,6 +57,11 @@ public class Timer : MonoBehaviour {
             time -= Time.deltaTime;
             timeinInt = (int)time;
             timerTxt.text = timeinInt.ToString();
+
+			if (time < bedHelpRemainingTime)
+			{
+				OnShowBedHelp?.Invoke();
+			}
         }
 
         else
