@@ -70,6 +70,8 @@ public class GameManager : MonoBehaviour
 			Timer.Instance.DaronneIntervention += UseDaronneIntervention;
 			Timer.Instance.EndRound += UseEndRound;
 		}
+
+        Cursor.visible = false;
     }
 
 	private void Update()
