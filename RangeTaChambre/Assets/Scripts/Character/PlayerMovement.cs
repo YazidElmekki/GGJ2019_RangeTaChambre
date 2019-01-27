@@ -5,15 +5,17 @@ public class PlayerMovement : PhysicsObject
 {
 	private Player player;
 
-	enum MoveState
+	public enum MoveState
 	{
 		NO_MOVE,
 		IDLE,
 		MOVING,
-		STUN
+		STUN,
+		HIDDEN,
 	}
 
 	private MoveState currentState = MoveState.IDLE;
+	public MoveState CurrentState { get { return currentState; } }
 
 	[SerializeField]
 	private float moveSpeed = 5.0f;
@@ -23,6 +25,8 @@ public class PlayerMovement : PhysicsObject
 	[SerializeField]
 	private float stunTime = 3.0f;
 	private Coroutine stunCouroutine = null;
+
+	private Coroutine hideCoroutine = null;
 
 	[Header("SD audio clips")]
 	[SerializeField]
@@ -45,7 +49,7 @@ public class PlayerMovement : PhysicsObject
 
 	protected override void ComputeVelocity()
 	{
-		if (currentState != MoveState.NO_MOVE && currentState != MoveState.STUN)
+		if (currentState != MoveState.NO_MOVE && currentState != MoveState.STUN && currentState != MoveState.HIDDEN)
 		{
 			Vector2 move = Vector2.zero;
 
@@ -114,5 +118,34 @@ public class PlayerMovement : PhysicsObject
 		yield return new WaitForSeconds(stunTime);
 		currentState = MoveState.IDLE;
 		stunCouroutine = null;
+	}
+
+	public void Hide(GameObject bed, GameObject wakeUpZone)
+	{
+		if (hideCoroutine == null)
+		{
+			hideCoroutine = StartCoroutine(HideRoutine(bed, wakeUpZone));
+		}
+	}
+
+	private IEnumerator HideRoutine(GameObject bed, GameObject wakeUpZone)
+	{
+		currentState = MoveState.HIDDEN;
+
+		playerAnimator.ResetTrigger("MoveTrigger");
+		playerAnimator.ResetTrigger("IdleTrigger");
+
+		playerAnimator.Play("Idle");
+
+		while (InputManager.Instance.GetButtonAction(ButtonActionEnum.TRHOW_OBJECT, player.PlayerIndex) == true)
+		{
+			yield return new WaitForEndOfFrame();
+		}
+
+		transform.position = wakeUpZone.transform.position;
+
+		currentState = MoveState.IDLE;
+		hideCoroutine = null;
+		bed.GetComponent<Collider2D>().enabled = true;
 	}
 }

@@ -12,7 +12,10 @@ public class Player : MonoBehaviour, IPlayerZoneTracker
     [SerializeField]
     float sizeToPickUpObject = 5;
     [SerializeField]
-    Bed bed;
+    GameObject bed;
+
+	[SerializeField]
+	private float distanceToHide = 2.0f;
 
     public bool isHidden = false;
 
@@ -44,125 +47,128 @@ public class Player : MonoBehaviour, IPlayerZoneTracker
 
 	void Update ()
 	{
-		if (InputManager.Instance.GetButtonActionDown(ButtonActionEnum.TAKE_X_OBJECT, playerIndex) == true)
+		if (playerMovement.CurrentState == PlayerMovement.MoveState.IDLE || playerMovement.CurrentState == PlayerMovement.MoveState.MOVING)
 		{
-            if (chest.TakeObject(1, playerIndex))
-				SetDefaultObjectPosition();
-		}
-		if (InputManager.Instance.GetButtonActionDown(ButtonActionEnum.TAKE_Y_OBJECT, playerIndex) == true)
-		{
-			if (chest.TakeObject(2, playerIndex))
-				SetDefaultObjectPosition();
-		}
-		if (InputManager.Instance.GetButtonActionDown(ButtonActionEnum.TAKE_B_OBJECT, playerIndex) == true)
-		{
-            if (chest.TakeObject(3, playerIndex))
-				SetDefaultObjectPosition();
-		}
-		if (InputManager.Instance.GetButtonActionDown(ButtonActionEnum.TRHOW_OBJECT, playerIndex) == true)
-		{
-            if (toyHasTaken != null)
-			{ 
-				Toy.DropResult dropResult = toyHasTaken.CanDrop();
-
-				if (dropResult == Toy.DropResult.NONE)
+			if (InputManager.Instance.GetButtonActionDown(ButtonActionEnum.TAKE_X_OBJECT, playerIndex) == true)
+			{
+				if (chest.TakeObject(1, playerIndex))
+					SetDefaultObjectPosition();
+			}
+			if (InputManager.Instance.GetButtonActionDown(ButtonActionEnum.TAKE_Y_OBJECT, playerIndex) == true)
+			{
+				if (chest.TakeObject(2, playerIndex))
+					SetDefaultObjectPosition();
+			}
+			if (InputManager.Instance.GetButtonActionDown(ButtonActionEnum.TAKE_B_OBJECT, playerIndex) == true)
+			{
+				if (chest.TakeObject(3, playerIndex))
+					SetDefaultObjectPosition();
+			}
+			if (InputManager.Instance.GetButtonActionDown(ButtonActionEnum.TRHOW_OBJECT, playerIndex) == true)
+			{
+				if (toyHasTaken != null)
 				{
-					if (toyHasTaken.CurrentObjectType == Toy.ObjectType.SMALL)
+					Toy.DropResult dropResult = toyHasTaken.CanDrop();
+
+					if (dropResult == Toy.DropResult.NONE)
 					{
-						Vector3 throwDir = toyHasTaken.transform.position - transform.position;
-						throwDir.Normalize();
-
-						toyHasTaken.Throw(throwDir, PlayerIndex);
-					}
-					else
-						toyHasTaken.Drop();
-
-					if (toyHasTaken.PlayerIndex == PlayerIndex && toyHasTaken.FirstValidDrop)
-					{
-						Collider2D[] overlapColliders = Physics2D.OverlapPointAll(toyHasTaken.transform.position);
-
-						bool canScore = false;
-
-						for (int i = 0; i < overlapColliders.Length; ++i)
+						if (toyHasTaken.CurrentObjectType == Toy.ObjectType.SMALL)
 						{
-							if (overlapColliders[i].gameObject.layer == LayerMask.NameToLayer("PlayerZone"))
+							Vector3 throwDir = toyHasTaken.transform.position - transform.position;
+							throwDir.Normalize();
+
+							toyHasTaken.Throw(throwDir, PlayerIndex);
+						}
+						else
+							toyHasTaken.Drop();
+
+						if (toyHasTaken.PlayerIndex == PlayerIndex && toyHasTaken.FirstValidDrop)
+						{
+							Collider2D[] overlapColliders = Physics2D.OverlapPointAll(toyHasTaken.transform.position);
+
+							bool canScore = false;
+
+							for (int i = 0; i < overlapColliders.Length; ++i)
 							{
-								if ((playerIndex == 0 && overlapColliders[i].gameObject.name == "Player2Zone") || (playerIndex == 1 && overlapColliders[i].gameObject.name == "Player1Zone"))
+								if (overlapColliders[i].gameObject.layer == LayerMask.NameToLayer("PlayerZone"))
 								{
-									canScore = true;
-									break;
+									if ((playerIndex == 0 && overlapColliders[i].gameObject.name == "Player2Zone") || (playerIndex == 1 && overlapColliders[i].gameObject.name == "Player1Zone"))
+									{
+										canScore = true;
+										break;
+									}
 								}
+							}
+
+
+							if (canScore == true)
+							{
+								toyHasTaken.FirstValidDrop = false;
+								GameManager.Instance.PlayerScored(playerIndex, toyHasTaken.Points);
 							}
 						}
 
+						toyHasTaken = null;
+					}
+					else if (dropResult == Toy.DropResult.CHEST)
+					{
+						GameManager.Instance.PlayerScored(playerIndex, toyHasTaken.Points);
+						Destroy(toyHasTaken.gameObject);
+						toyHasTaken = null;
+						return;
+					}
+				}
+				else
+				{
+					if (Vector3.Distance(transform.position, bed.transform.position) < distanceToHide)
+					{
+						//////////
+						bed.GetComponent<Collider2D>().enabled = false;
+						transform.position = bed.transform.position;
+						isHidden = true;
 
-						if (canScore == true)
+						playerMovement.Hide(bed, bed.GetComponent<BedWakeUpZone>().WakeUpZone);
+						//////////
+					}
+					else
+					{
+
+						GameObject[] objects;
+
+						objects = GameObject.FindGameObjectsWithTag("Toy");
+						Toy objectToPickUp = null;
+						Vector3 newDistance = new Vector3(10, 10, 10);
+
+						foreach (GameObject Object in objects)
 						{
-							toyHasTaken.FirstValidDrop = false;
-							GameManager.Instance.PlayerScored(playerIndex, toyHasTaken.Points);
+							Vector3 distance;
+
+							distance = Object.transform.position - transform.position;
+
+							if (distance.magnitude < newDistance.magnitude && distance.magnitude < sizeToPickUpObject)
+							{
+								newDistance = distance;
+
+								if (!Object.gameObject.GetComponent<Toy>().IsInChest)
+									objectToPickUp = Object.gameObject.GetComponent<Toy>();
+							}
+						}
+						if (objectToPickUp != null)// && objectToPickUp.FirstValidDrop == false)
+						{
+							if (gameObject == GameManager.Instance.PlayerOne.gameObject && GameManager.Instance.PlayerTwo.toyHasTaken == objectToPickUp)
+							{
+								GameManager.Instance.PlayerTwo.toyHasTaken = null;
+							}
+							else if (gameObject == GameManager.Instance.PlayerTwo.gameObject && GameManager.Instance.PlayerOne.toyHasTaken == objectToPickUp)
+							{
+								GameManager.Instance.PlayerOne.toyHasTaken = null;
+							}
+
+							objectToPickUp.Taken(playerIndex);
+							SetDefaultObjectPosition();
 						}
 					}
-
-					toyHasTaken = null;
 				}
-				else if(dropResult == Toy.DropResult.CHEST)
-				{
-					GameManager.Instance.PlayerScored(playerIndex, toyHasTaken.Points);
-					Destroy(toyHasTaken.gameObject);
-					toyHasTaken = null;
-					return;
-				}
-			}
-            else
-            {
-                //////////
-
-               if (Physics2D.Raycast(transform.position, bed.transform.position, 1.0f))
-               {
-                    bed.GetComponent<Collider2D>().enabled = false;
-                    transform.position = bed.transform.position;
-                    isHidden = true;
-
-                    StartCoroutine(TimeToHidden(2.0f));
-                }
-
-                //////////
-
-                GameObject[] objects;
-
-                objects = GameObject.FindGameObjectsWithTag("Toy");
-                Toy objectToPickUp = null;
-                Vector3 newDistance = new Vector3(10, 10, 10);
-
-                foreach (GameObject Object in objects)
-                {
-                    Vector3 distance;
-
-                    distance = Object.transform.position - transform.position;
-
-                    if (distance.magnitude < newDistance.magnitude && distance.magnitude < sizeToPickUpObject)
-                    {
-                        newDistance = distance;
-
-                        if (!Object.gameObject.GetComponent<Toy>().IsInChest)
-                            objectToPickUp = Object.gameObject.GetComponent<Toy>();
-                    }
-                }
-                if (objectToPickUp != null)// && objectToPickUp.FirstValidDrop == false)
-                {
-                    if (gameObject == GameManager.Instance.PlayerOne.gameObject && GameManager.Instance.PlayerTwo.toyHasTaken == objectToPickUp)
-                    {
-                        GameManager.Instance.PlayerTwo.toyHasTaken = null;
-                    }
-                    else if (gameObject == GameManager.Instance.PlayerTwo.gameObject && GameManager.Instance.PlayerOne.toyHasTaken == objectToPickUp)
-                    {
-                        GameManager.Instance.PlayerOne.toyHasTaken = null;
-                    }
-
-                    objectToPickUp.Taken(playerIndex);
-                    SetDefaultObjectPosition();
-                }
-                
 			}
 		}
 		UpdateObjectPosition();
@@ -179,13 +185,4 @@ public class Player : MonoBehaviour, IPlayerZoneTracker
 			}
 		}
 	}
-
-    IEnumerator TimeToHidden(float time)
-    {
-        Debug.Log("1");
-
-        yield return new WaitForSeconds(time);
-        Debug.Log("2");
-
-    }
 }

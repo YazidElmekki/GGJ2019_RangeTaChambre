@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections;
+
 
 public class GameManager : MonoBehaviour
 {
@@ -17,6 +19,15 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     int loossingScoreWhenDaronne = 2;
+
+	[SerializeField]
+	private float winTime = 3.0f;
+
+	[SerializeField]
+	private GameObject winScreenObject;
+
+	[SerializeField]
+	private Text winText;
 
 	public static GameManager Instance
 	{
@@ -57,6 +68,10 @@ public class GameManager : MonoBehaviour
 			player1Score += points;
 		else
 			player2Score += points;
+
+		player1Score = Mathf.Max(0, player1Score);
+		player2Score = Mathf.Max(0, player2Score);
+
 
 		ScoreChanged(player1Score, player2Score);
 	}
@@ -102,14 +117,25 @@ public class GameManager : MonoBehaviour
 
     void Win(int playerIndex)
     {
-        Debug.Log("EndGame, Add final screen here");
+
+		StartCoroutine(WinCoroutine(playerIndex));
 
         //Time.timeScale = 0.1f;
 
         //yield return new WaitForSeconds(5);
 
-        SceneManager.LoadScene("MainMenu");
 
         //Load final Screen of win
     }
+
+
+	private IEnumerator WinCoroutine(int winPlayerIndex)
+	{
+		winText.text = "PLAYER " + (winPlayerIndex +1) + " WIN !";
+		winScreenObject.SetActive(true);
+
+		yield return new WaitForSeconds(winTime);
+
+		SceneManager.LoadScene("MainMenu");
+	}
 }

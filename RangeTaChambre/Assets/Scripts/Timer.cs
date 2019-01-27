@@ -38,7 +38,7 @@ public class Timer : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        moitiederound = RoundTimer / 2;
+        moitiederound = RoundTimer / 2.0f;
         time = moitiederound;
         timeinInt = (int)time;
         HalfTime = false;
@@ -56,25 +56,25 @@ public class Timer : MonoBehaviour {
 
         else
         {
-            if (HalfTime)
-            {
-                if (EndRound != null)
-                    EndRound();
+			if (HalfTime)
+			{
+				if (EndRound != null)
+					EndRound();
 
-                time = moitiederound / 2;
+				time = moitiederound / 2;
 
-                if (time <= MinTimeDaronne)
-                    time = MinTimeDaronne;
+				if (time <= MinTimeDaronne)
+					time = MinTimeDaronne;
+			}
+			else
+			{
+				if (DaronneIntervention != null)
+					DaronneIntervention();
 
-                return;
-            }
+				time = moitiederound;
 
-            if (DaronneIntervention != null)
-                DaronneIntervention();
-
-            time = moitiederound;
-
-            HalfTime = true;
+				HalfTime = true;
+			}
         }
     }
 }
