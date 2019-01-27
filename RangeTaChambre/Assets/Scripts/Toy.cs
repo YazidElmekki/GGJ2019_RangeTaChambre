@@ -41,6 +41,8 @@ public class Toy : MonoBehaviour, IPlayerZoneTracker
 	Vector3 throwStartPos;
 	Vector3 throwDirection;
 	int throwingPlayerIndex;
+	[HideInInspector]
+	public int originalPlayerIndex = -1;
 
     public int Points;
 
@@ -161,7 +163,7 @@ public class Toy : MonoBehaviour, IPlayerZoneTracker
 			{
 				Chest chest = colliders[i].GetComponent<Chest>();
 
-				if (chest.playerIndex != PlayerIndex && FirstValidDrop == false)
+				if (chest.playerIndex == originalPlayerIndex )
 				{
 					return DropResult.CHEST;
 				}
@@ -169,7 +171,6 @@ public class Toy : MonoBehaviour, IPlayerZoneTracker
 
 			if (colliders[i].gameObject != gameObject && colliders[i].gameObject.layer != LayerMask.NameToLayer("PlayerZone") && colliders[i].gameObject != GameManager.Instance.GetPlayer(PlayerIndex).gameObject)
 			{
-				Debug.Log("Collider : " + colliders[i].gameObject.name);
 				++otherCollider;
 			}
 		}
@@ -186,7 +187,12 @@ public class Toy : MonoBehaviour, IPlayerZoneTracker
     {
         state = State.CARRIED;
 
-        PlayerIndex = playerIndex; // To Change
+		if (originalPlayerIndex == -1)
+		{
+			originalPlayerIndex = playerIndex;
+		}
+
+        PlayerIndex = playerIndex;
         IsInChest = false;
 
         GameManager.Instance.GetPlayer(PlayerIndex).toyHasTaken = GetComponent<Toy>();
