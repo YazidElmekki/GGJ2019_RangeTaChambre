@@ -38,7 +38,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1736825599196076}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.595, y: 10.187, z: 0.15429688}
+  m_LocalPosition: {x: -5.3951616, y: 7.7532797, z: 0.15429688}
   m_LocalScale: {x: 0.3698225, y: 0.39829153, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -120,6 +120,7 @@ MonoBehaviour:
   FirstValidDrop: 1
   ThrowDistance: 5
   throwSpeed: 10
+  originalPlayerIndex: -1
   Points: 2
   IsInChest: 1
   toySprite: {fileID: 21300000, guid: fba182c77965da944a31c320a9afa1bb, type: 3}
@@ -140,7 +141,7 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a284e7cb3cb5ef740986265d1b490a6f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
