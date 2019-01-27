@@ -2982,6 +2982,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loosenPointOnAngryMother: -5
+  motherShoutClip: {fileID: 8300000, guid: 8df68ce817bb00f479851ad56347887d, type: 3}
 --- !u!4 &1928152689
 Transform:
   m_ObjectHideFlags: 0
