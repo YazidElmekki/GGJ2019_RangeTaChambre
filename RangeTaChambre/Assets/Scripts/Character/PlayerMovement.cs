@@ -71,12 +71,20 @@ public class PlayerMovement : PhysicsObject
 		{
 			currentState = MoveState.MOVING;
 			playerAnimator.ResetTrigger("IdleTrigger");
-			playerAnimator.SetTrigger("MoveTrigger");
+			if (player.toyHasTaken == null)
+			{
+				playerAnimator.SetTrigger("MoveTrigger");
+			}
+			else
+			{
+				playerAnimator.SetTrigger("MoveTriggerWithObject");
+			}
 		}
 		else if (currentState == MoveState.MOVING && (targetVelocity.x == 0.0f && targetVelocity.y == 0.0f))
 		{
 			currentState = MoveState.IDLE;
 			playerAnimator.ResetTrigger("MoveTrigger");
+			playerAnimator.ResetTrigger("MoveTriggerWithObject");
 			playerAnimator.SetTrigger("IdleTrigger");
 		}
 	}
@@ -107,6 +115,10 @@ public class PlayerMovement : PhysicsObject
 				playerAnimator.SetTrigger("IdleTrigger");
 			}
 
+			playerAnimator.SetBool("IsStun", true);
+
+			InputManager.Instance.ActivateGamepadVibration(player.PlayerIndex, 1.0f, Vector2.one * 0.25f, 0.25f);
+
 			currentState = MoveState.STUN;
 			StartCoroutine(ExitFromStun());
 			playerAudioSource.PlayOneShot(stunAudioClip);
@@ -118,6 +130,7 @@ public class PlayerMovement : PhysicsObject
 		yield return new WaitForSeconds(stunTime);
 		currentState = MoveState.IDLE;
 		stunCouroutine = null;
+		playerAnimator.SetBool("IsStun", false);
 	}
 
 	public void Hide(GameObject bed, GameObject wakeUpZone)
@@ -134,6 +147,7 @@ public class PlayerMovement : PhysicsObject
 
 		playerAnimator.ResetTrigger("MoveTrigger");
 		playerAnimator.ResetTrigger("IdleTrigger");
+		playerAnimator.ResetTrigger("MoveTriggerWithObject");
 
 		playerAnimator.Play("Idle");
 

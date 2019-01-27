@@ -31,10 +31,13 @@ public class Player : MonoBehaviour, IPlayerZoneTracker
 
 	private PlayerMovement playerMovement;
 
+	Animator playerAnimator;
+
 	private void Start()
 	{
 		boxCollider = GetComponent<BoxCollider2D>();
 		playerMovement = GetComponent<PlayerMovement>();
+		playerAnimator = GetComponent<Animator>();
 	}
 
 	private void SetDefaultObjectPosition()
@@ -43,6 +46,15 @@ public class Player : MonoBehaviour, IPlayerZoneTracker
 		defaultDir *= Mathf.Max(boxCollider.size.x, boxCollider.size.y) + takenObjectAdditionalDistance;
 
 		toyHasTaken.transform.position = transform.position + defaultDir;
+
+		if (toyHasTaken.CurrentObjectType == Toy.ObjectType.BIG)
+		{
+			playerAnimator.SetBool("IsBigObject", true);
+		}
+		else
+		{
+			playerAnimator.SetBool("IsBigObject", false);
+		}
 	}
 
 	void Update ()
@@ -72,6 +84,8 @@ public class Player : MonoBehaviour, IPlayerZoneTracker
 
 					if (dropResult == Toy.DropResult.NONE)
 					{
+						playerAnimator.SetBool("IsBigObject", false);
+
 						if (toyHasTaken.CurrentObjectType == Toy.ObjectType.SMALL)
 						{
 							Vector3 throwDir = toyHasTaken.transform.position - transform.position;
