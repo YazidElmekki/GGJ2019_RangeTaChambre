@@ -266,6 +266,8 @@ MonoBehaviour:
   chest: {fileID: 0}
   sizeToPickUpObject: 5
   bed: {fileID: 0}
+  distanceToHide: 3
+  isHidden: 0
   toyHasTaken: {fileID: 0}
   takenObjectAdditionalDistance: 0.25
 --- !u!212 &212464764499515992
