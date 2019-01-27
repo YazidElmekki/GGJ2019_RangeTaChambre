@@ -58,8 +58,8 @@ public class GameManager : MonoBehaviour
 
 	private void Update()
 	{
-		player1ScoreText.text = "P1 : " + player1Score;
-		player2ScoreText.text = "P2 : " + player2Score;
+		player1ScoreText.text = "Red : " + player1Score;
+		player2ScoreText.text = "Blue : " + player2Score;
 	}
 
 	public void PlayerScored(int playerIndex, int points)

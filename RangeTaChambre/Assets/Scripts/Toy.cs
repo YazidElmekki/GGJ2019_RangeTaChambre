@@ -161,7 +161,7 @@ public class Toy : MonoBehaviour, IPlayerZoneTracker
 			{
 				Chest chest = colliders[i].GetComponent<Chest>();
 
-				if (chest.playerIndex == PlayerIndex && FirstValidDrop == false)
+				if (chest.playerIndex != PlayerIndex && FirstValidDrop == false)
 				{
 					return DropResult.CHEST;
 				}
@@ -186,7 +186,7 @@ public class Toy : MonoBehaviour, IPlayerZoneTracker
     {
         state = State.CARRIED;
 
-        PlayerIndex = playerIndex;
+        PlayerIndex = playerIndex; // To Change
         IsInChest = false;
 
         GameManager.Instance.GetPlayer(PlayerIndex).toyHasTaken = GetComponent<Toy>();
