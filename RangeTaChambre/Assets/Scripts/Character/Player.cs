@@ -106,7 +106,7 @@ public class Player : MonoBehaviour, IPlayerZoneTracker
 							{
 								if (overlapColliders[i].gameObject.layer == LayerMask.NameToLayer("PlayerZone"))
 								{
-									if ((playerIndex == 0 && overlapColliders[i].gameObject.name == "Player1Zone") || (playerIndex == 1 && overlapColliders[i].gameObject.name == "Player2Zone"))
+									if ((playerIndex == 0 && overlapColliders[i].gameObject.name == "Player1Zone" && playerIndex == toyHasTaken.originalPlayerIndex) || (playerIndex == 1 && overlapColliders[i].gameObject.name == "Player2Zone" && playerIndex == toyHasTaken.originalPlayerIndex))
 									{
 										canScore = true;
 										break;
