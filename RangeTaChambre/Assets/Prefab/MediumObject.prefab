@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 61462559131612148}
   - component: {fileID: 114872901724996696}
   - component: {fileID: 212179695631292166}
+  - component: {fileID: 58860219761171918}
   m_Layer: 0
   m_Name: MediumObject
   m_TagString: Toy
@@ -42,6 +43,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &58860219761171918
+CircleCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1474376965510304}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 1.2299999
 --- !u!61 &61462559131612148
 BoxCollider2D:
   m_ObjectHideFlags: 1
