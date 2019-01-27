@@ -3,7 +3,9 @@ guid: 9153e2b8392c84d479eee8772c05a65e
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - toySprite: {instanceID: 0}
+  - dropAudioClip: {fileID: 8300000, guid: 98beb728507940f478d2dd30fc0c47dd, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -84,7 +84,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1398712961604948}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.25, y: -1.97, z: 0}
+  m_LocalPosition: {x: -3.44, y: -0.62, z: 0}
   m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_Children:
   - {fileID: 4932239919494200}
@@ -280,7 +280,8 @@ MonoBehaviour:
   footStepAudioClip: {fileID: 8300000, guid: f46b92c72e78a6d4797cdb11d1184460, type: 3}
   slowFootStepAudioClip: {fileID: 8300000, guid: e0843ac48b979b04482d06be907fecd7,
     type: 3}
-  stunAudioClip: {fileID: 8300000, guid: 57315e6ca39e2e043ac32cfcf200aa48, type: 3}
+  stunAudioClip: {fileID: 8300000, guid: 3813efb5d1ccc654a878a8041dfe4cb3, type: 3}
+  dolorAudioClip: {fileID: 8300000, guid: 2d9f4670e7874a24eace16916f5ead73, type: 3}
 --- !u!114 &114951432501558692
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -300,6 +301,8 @@ MonoBehaviour:
   isHidden: 0
   toyHasTaken: {fileID: 0}
   takenObjectAdditionalDistance: 0.25
+  dropAudioClip: {fileID: 8300000, guid: 98beb728507940f478d2dd30fc0c47dd, type: 3}
+  throwAudioClip: {fileID: 8300000, guid: f7d5ff6e4137bb548957f296e60cbe9f, type: 3}
 --- !u!212 &212173005525313724
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -38,6 +38,9 @@ public class PlayerMovement : PhysicsObject
 	[SerializeField]
 	private AudioClip stunAudioClip;
 
+	[SerializeField]
+	private AudioClip dolorAudioClip;
+
 	private AudioSource playerAudioSource;
 
 	private void Start()
@@ -119,14 +122,18 @@ public class PlayerMovement : PhysicsObject
 
 			InputManager.Instance.ActivateGamepadVibration(player.PlayerIndex == 0 ? 1 : 0, 1.0f, Vector2.one * 0.5f, 0.25f);
 
+			playerAudioSource.PlayOneShot(dolorAudioClip);
+
 			currentState = MoveState.STUN;
 			StartCoroutine(ExitFromStun());
-			playerAudioSource.PlayOneShot(stunAudioClip);
 		}
 	}
 
 	private IEnumerator ExitFromStun()
 	{
+		yield return new WaitForSeconds(1.0f);
+		playerAudioSource.PlayOneShot(stunAudioClip);
+
 		yield return new WaitForSeconds(stunTime);
 		currentState = MoveState.IDLE;
 		stunCouroutine = null;

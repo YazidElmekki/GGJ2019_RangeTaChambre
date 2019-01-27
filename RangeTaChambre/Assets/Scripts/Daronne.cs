@@ -10,9 +10,15 @@ public class Daronne : MonoBehaviour
 
 	private Animator animatorController;
 
+	[SerializeField]
+	private AudioClip motherShoutClip;
+
+	private AudioSource motherAudioSource;
+
 	private void Start()
 	{
 		animatorController = GetComponent<Animator>();
+		motherAudioSource = gameObject.AddComponent<AudioSource>();
 	}
 
 	public void Intervention()
@@ -42,4 +48,9 @@ public class Daronne : MonoBehaviour
 		//PlayAnim
 		Debug.Log("Add animation here || End round");
     }
+
+	private void OnShout()
+	{
+		motherAudioSource.PlayOneShot(motherShoutClip);
+	}
 }

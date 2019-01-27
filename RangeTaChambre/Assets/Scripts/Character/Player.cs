@@ -33,8 +33,19 @@ public class Player : MonoBehaviour, IPlayerZoneTracker
 
 	Animator playerAnimator;
 
+	[Header("SD audio clips")]
+	[SerializeField]
+	private AudioClip dropAudioClip;
+	[SerializeField]
+	private AudioClip throwAudioClip;
+
+
+	private AudioSource playerAudioSource;
+
+
 	private void Start()
 	{
+		playerAudioSource = GetComponent<AudioSource>();
 		boxCollider = GetComponent<BoxCollider2D>();
 		playerMovement = GetComponent<PlayerMovement>();
 		playerAnimator = GetComponent<Animator>();
@@ -57,7 +68,7 @@ public class Player : MonoBehaviour, IPlayerZoneTracker
 		}
 	}
 
-	void Update ()
+	void Update()
 	{
 		if (playerMovement.CurrentState == PlayerMovement.MoveState.IDLE || playerMovement.CurrentState == PlayerMovement.MoveState.MOVING)
 		{
@@ -88,13 +99,18 @@ public class Player : MonoBehaviour, IPlayerZoneTracker
 
 						if (toyHasTaken.CurrentObjectType == Toy.ObjectType.SMALL)
 						{
+							playerAudioSource.PlayOneShot(throwAudioClip);
+
 							Vector3 throwDir = toyHasTaken.transform.position - transform.position;
 							throwDir.Normalize();
 
 							toyHasTaken.Throw(throwDir, PlayerIndex);
 						}
 						else
+						{
+							playerAudioSource.PlayOneShot(dropAudioClip);
 							toyHasTaken.Drop();
+						}
 
 						if (toyHasTaken.PlayerIndex == PlayerIndex && toyHasTaken.FirstValidDrop)
 						{
